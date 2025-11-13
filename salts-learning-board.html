@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мета-дошка: Вивчаємо солі</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .goal {
+            color: #666;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+        }
+
+        .block {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .block-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #f0f0f0;
+        }
+
+        .block-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+        }
+
+        .block-title {
+            flex: 1;
+        }
+
+        .block-title h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .block-title p {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        /* Block 1: Matching Pairs */
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .match-item {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            font-weight: 500;
+        }
+
+        .match-item.left {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .match-item.right {
+            background: #fce4ec;
+            color: #c2185b;
+        }
+
+        .match-item.selected {
+            border-color: #667eea;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .match-item.correct {
+            background: #c8e6c9;
+            color: #2e7d32;
+            border-color: #2e7d32;
+        }
+
+        .match-item.incorrect {
+            background: #ffcdd2;
+            color: #c62828;
+            border-color: #c62828;
+        }
+
+        /* Block 2: Video/Animation */
+        .video-container {
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .reaction-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.3em;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .reaction-step {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        /* Block 3: Drag and Drop */
+        .ions-bank {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .ion-card {
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            text-align: center;
+            cursor: move;
+            transition: all 0.3s;
+            border: 2px solid #1976d2;
+            font-weight: bold;
+            color: #1976d2;
+        }
+
+        .ion-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.3);
+        }
+
+        .ion-card.dragging {
+            opacity: 0.5;
+        }
+
+        .drop-zone {
+            min-height: 100px;
+            padding: 20px;
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            background: #f8f9ff;
+        }
+
+        .drop-zone.active {
+            background: #e3f2fd;
+            border-color: #1976d2;
+        }
+
+        .formula-display {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        /* Block 4: Table */
+        .salt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .salt-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .salt-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .salt-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .salt-table input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .salt-table input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Block 5: Creative Zone */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .gallery-item {
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+
+        .gallery-item:nth-child(1) { background: #fff3e0; }
+        .gallery-item:nth-child(2) { background: #e8f5e9; }
+        .gallery-item:nth-child(3) { background: #e3f2fd; }
+        .gallery-item:nth-child(4) { background: #f3e5f5; }
+
+        .gallery-item:hover {
+            transform: scale(1.08) translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .gallery-item:active {
+            transform: scale(1.02);
+        }
+
+        .gallery-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .gallery-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .gallery-formula {
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+
+        /* Block 6: Reflection */
+        .reflection-options {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .reflection-item {
+            padding: 20px;
+            border-radius: 15px;
+            background: #f5f5f5;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .reflection-item:hover {
+            background: #e3f2fd;
+            border-color: #667eea;
+        }
+
+        .reflection-item.selected {
+            background: #c8e6c9;
+            border-color: #2e7d32;
+        }
+
+        .emoji-rating {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .emoji-btn {
+            font-size: 3em;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .emoji-btn:hover {
+            transform: scale(1.2);
+            background: #f5f5f5;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .success-message {
+            background: #c8e6c9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modal for Creative Zone */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-icon {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.8em;
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .modal-formula {
+            font-size: 1.5em;
+            color: #764ba2;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .modal-description {
+            color: #666;
+            line-height: 1.8;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .board {
+                grid-template-columns: 1fr;
+            }
+            
+            .ions-bank {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Мета-дошка: Вивчаємо солі</h1>
+            <p class="goal">📚 Мета: Навчитися визначати склад солей, записувати формули та правильно складати їхні назви</p>
+        </div>
+
+        <div class="board">
+            <!-- Block 1: Matching Pairs -->
+            <div class="block">
+                <div class="block-header">
+                    <div class="block-icon">🟢</div>
+                    <div class="block-title">
+                        <h2>1. Старт – Активізація знань</h2>
+                        <p>Пригадай, що ти вже знаєш</p>
+                    </div>
+                </div>
+                <p style="margin-bottom: 15px; color: #666; font-weight: 500;">
+                    🧩 Завдання: Співвіднеси поняття з їх визначеннями
+                </p>
+                <div class="matching-container" id="matchingGame">
+                    <!-- Terms -->
+                    <div class="match-item left" data-id="1" data-type="term">Катіон</div>
+                    <div class="match-item right" data-id="1" data-type="def">Позитивно заряджений іон</div>
+                    
+                    <div class="match-item left" data-id="2" data-type="term">Аніон</div>
+                    <div class="match-item right" data-id="2" data-type="def">Негативно заряджений іон</div>
+                    
+                    <div class="match-item left" data-id="3" data-type="term">Кислотний залишок</div>
+                    <div class="match-item right" data-id="3" data-type="def">Частина молекули кислоти без Н⁺</div>
+                    
+                    <div class="match-item left" data-id="4" data-type="term">Основа</div>
+                    <div class="match-item right" data-id="4" data-type="def">Сполука, що містить OH⁻</div>
+                </div>
+                <div class="success-message" id="matchSuccess">✅ Чудово! Всі пари знайдено!</div>
+            </div>
+
+            <!-- Block 2: Learning New -->
+            <div class="block">
+                <div class="block-header">
+                    <div class="block-icon">⚗️</div>
+                    <div class="block-title">
+                        <h2>2. Вивчаємо нове</h2>
+                        <p>Як утворюються солі?</p>
+                    </div>
+                </div>
+                <div class="video-container">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">🧠 Демонстрація реакції</h3>
+                    <div class="reaction-demo">
+                        <div class="reaction-step">
+                            <strong>NaOH + HCl → NaCl + H₂O</strong>
+                        </div>
+                        <div class="reaction-step" style="margin-top: 20px;">
+                            Основа + Кислота → Сіль + Вода
+                        </div>
+                        <div class="reaction-step" style="margin-top: 20px;">
+                            <strong>Катіон Na⁺ + Аніон Cl⁻ → NaCl</strong>
+                        </div>
+                    </div>
+                    <p style="background: #fff3e0; padding: 15px; border-radius: 10px; color: #e65100; font-weight: 500;">
+                        💡 <strong>Правило:</strong> Сіль = Катіон металу + Аніон кислотного залишку
+                    </p>
+                </div>
+            </div>
+
+            <!-- Block 3: Practice -->
+            <div class="block">
+                <div class="block-header">
+                    <div class="block-icon">🧮</div>
+                    <div class="block-title">
+                        <h2>3. Практикуємо</h2>
+                        <p>Визнач формулу</p>
+                    </div>
+                </div>
+                <p style="margin-bottom: 15px; color: #666; font-weight: 500;">
+                    🔸 Перетягни картки, щоб утворити формулу солі:
+                </p>
+                <div class="ions-bank" id="ionsBank">
+                    <div class="ion-card" draggable="true" data-ion="Na⁺">Na⁺</div>
+                    <div class="ion-card" draggable="true" data-ion="K⁺">K⁺</div>
+                    <div class="ion-card" draggable="true" data-ion="Ca²⁺">Ca²⁺</div>
+                    <div class="ion-card" draggable="true" data-ion="Fe³⁺">Fe³⁺</div>
+                    <div class="ion-card" draggable="true" data-ion="Cl⁻">Cl⁻</div>
+                    <div class="ion-card" draggable="true" data-ion="SO₄²⁻">SO₄²⁻</div>
+                    <div class="ion-card" draggable="true" data-ion="NO₃⁻">NO₃⁻</div>
+                    <div class="ion-card" draggable="true" data-ion="CO₃²⁻">CO₃²⁻</div>
+                </div>
+                <div class="drop-zone" id="dropZone">
+                    <span style="color: #999;">Перетягни сюди катіон та аніон</span>
+                </div>
+                <div class="formula-display" id="formulaDisplay">Формула з'явиться тут</div>
+                <button class="btn" onclick="clearFormula()">🔄 Очистити</button>
+            </div>
+
+            <!-- Block 4: Naming -->
+            <div class="block">
+                <div class="block-header">
+                    <div class="block-icon">🧠</div>
+                    <div class="block-title">
+                        <h2>4. Назви сіль</h2>
+                        <p>Як назвати сполуку?</p>
+                    </div>
+                </div>
+                <table class="salt-table">
+                    <thead>
+                        <tr>
+                            <th>Формула</th>
+                            <th>Назва катіона</th>
+                            <th>Назва аніона</th>
+                            <th>Назва солі</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>NaCl</strong></td>
+                            <td>Натрій</td>
+                            <td>Хлорид</td>
+                            <td>Натрій хлорид</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CuSO₄</strong></td>
+                            <td>Купрум(II)</td>
+                            <td>Сульфат</td>
+                            <td>Купрум(II) сульфат</td>
+                        </tr>
+                        <tr>
+                            <td><strong>KNO₃</strong></td>
+                            <td><input type="text" placeholder="Введи назву" id="cation1"></td>
+                            <td><input type="text" placeholder="Введи назву" id="anion1"></td>
+                            <td><input type="text" placeholder="Введи назву" id="salt1"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>CaCO₃</strong></td>
+                            <td><input type="text" placeholder="Введи назву" id="cation2"></td>
+                            <td><input type="text" placeholder="Введи назву" id="anion2"></td>
+                            <td><input type="text" placeholder="Введи назву" id="salt2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn" onclick="checkNaming()">✓ Перевірити відповіді</button>
+                <div class="success-message" id="namingSuccess"></div>
+            </div>
+
+            <!-- Block 5: Creative Zone -->
+            <div class="block">
+                <div class="block-header">
+                    <div class="block-icon">🎨</div>
+                    <div class="block-title">
+                        <h2>5. Творча зона</h2>
+                        <p>Солі навколо нас</p>
+                    </div>
+                </div>
+                <p style="margin-bottom: 15px; color: #667eea; font-weight: 600; background: #e3f2fd; padding: 12px; border-radius: 10px; text-align: center;">
+                    👆 Натисни на картку, щоб дізнатися більше про цю сіль!
+                </p>
+                <div class="gallery">
+                    <div class="gallery-item" onclick="showInfo('salt')">
+                        <div class="gallery-icon">🧂</div>
+                        <div class="gallery-title">Кухонна сіль</div>
+                        <div class="gallery-formula">NaCl</div>
+                    </div>
+                    <div class="gallery-item" onclick="showInfo('soda')">
+                        <div class="gallery-icon">🫧</div>
+                        <div class="gallery-title">Харчова сода</div>
+                        <div class="gallery-formula">NaHCO₃</div>
+                    </div>
+                    <div class="gallery-item" onclick="showInfo('chalk')">
+                        <div class="gallery-icon">✏️</div>
+                        <div class="gallery-title">Крейда</div>
+                        <div class="gallery-formula">CaCO₃</div>
+                    </div>
+                    <div class="gallery-item" onclick="showInfo('gypsum')">
+                        <div class="gallery-icon">🏗️</div>
+                        <div class="gallery-title">Гіпс</div>
+                        <div class="gallery-formula">CaSO₄·2H₂O</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block 6: Reflection -->
+            <div class="block">
+                <div class="block-header">
+                    <div class="block-icon">💬</div>
+                    <div class="block-title">
+                        <h2>6. Рефлексія</h2>
+                        <p>Що нового я дізнався?</p>
+                    </div>
+                </div>
+                <h3 style="color: #667eea; margin-bottom: 15px;">Як тобі урок?</h3>
+                <div class="emoji-rating">
+                    <div class="emoji-btn" onclick="selectEmoji(this, '🤩')">🤩</div>
+                    <div class="emoji-btn" onclick="selectEmoji(this, '😊')">😊</div>
+                    <div class="emoji-btn" onclick="selectEmoji(this, '😐')">😐</div>
+                    <div class="emoji-btn" onclick="selectEmoji(this, '😕')">😕</div>
+                </div>
+                <div class="reflection-options">
+                    <div class="reflection-item" onclick="toggleReflection(this)">
+                        ✨ Мені сподобалось складати формули солей
+                    </div>
+                    <div class="reflection-item" onclick="toggleReflection(this)">
+                        🧪 Цікаво дізнатись про солі в побуті
+                    </div>
+                    <div class="reflection-item" onclick="toggleReflection(this)">
+                        📚 Хочу вивчити більше хімічних реакцій
+                    </div>
+                    <div class="reflection-item" onclick="toggleReflection(this)">
+                        🔬 Планую провести досліди з солями
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Creative Zone -->
+    <div class="modal" id="saltModal" onclick="closeModal(event)">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal(event)">&times;</span>
+            <div class="modal-icon" id="modalIcon">🧂</div>
+            <h2 class="modal-title" id="modalTitle">Кухонна сіль</h2>
+            <p class="modal-formula" id="modalFormula">NaCl</p>
+            <p class="modal-description" id="modalDescription">Опис з'явиться тут</p>
+        </div>
+    </div>
+
+    <script>
+        // Block 1: Matching Game
+        let matchingState = {
+            selected: null,
+            matched: []
+        };
+
+        document.getElementById('matchingGame').addEventListener('click', function(e) {
+            const item = e.target.closest('.match-item');
+            if (!item || item.classList.contains('correct')) return;
+
+            if (!matchingState.selected) {
+                matchingState.selected = item;
+                item.classList.add('selected');
+            } else {
+                const first = matchingState.selected;
+                const second = item;
+
+                if (first.dataset.id === second.dataset.id && first.dataset.type !== second.dataset.type) {
+                    first.classList.remove('selected');
+                    first.classList.add('correct');
+                    second.classList.add('correct');
+                    matchingState.matched.push(first.dataset.id);
+                    
+                    if (matchingState.matched.length === 4) {
+                        document.getElementById('matchSuccess').classList.add('show');
+                    }
+                } else {
+                    first.classList.add('incorrect');
+                    second.classList.add('incorrect');
+                    setTimeout(() => {
+                        first.classList.remove('incorrect', 'selected');
+                        second.classList.remove('incorrect');
+                    }, 800);
+                }
+                matchingState.selected = null;
+            }
+        });
+
+        // Block 3: Drag and Drop
+        let droppedIons = [];
+
+        document.querySelectorAll('.ion-card').forEach(card => {
+            card.addEventListener('dragstart', function() {
+                this.classList.add('dragging');
+            });
+
+            card.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+            });
+        });
+
+        const dropZone = document.getElementById('dropZone');
+
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('active');
+        });
+
+        dropZone.addEventListener('dragleave', function() {
+            this.classList.remove('active');
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('active');
+            
+            const card = document.querySelector('.dragging');
+            if (card && droppedIons.length < 2) {
+                const ion = card.dataset.ion;
+                droppedIons.push(ion);
+                updateFormula();
+            }
+        });
+
+        function updateFormula() {
+            const display = document.getElementById('formulaDisplay');
+            if (droppedIons.length === 0) {
+                display.textContent = 'Формула з\'явиться тут';
+            } else if (droppedIons.length === 1) {
+                display.textContent = droppedIons[0] + ' + ?';
+            } else {
+                display.textContent = calculateFormula(droppedIons[0], droppedIons[1]);
+            }
+        }
+
+        function calculateFormula(ion1, ion2) {
+            // Simple formula calculation
+            const cation = ion1.includes('⁺') ? ion1 : ion2;
+            const anion = ion1.includes('⁻') ? ion1 : ion2;
+            
+            const cationSymbol = cation.split('⁺')[0];
+            const anionSymbol = anion.split('⁻')[0];
+            
+            return `${cationSymbol}${anionSymbol}`;
+        }
+
+        function clearFormula() {
+            droppedIons = [];
+            updateFormula();
+        }
+
+        // Block 4: Naming Check
+        function checkNaming() {
+            const answers = {
+                cation1: 'калій',
+                anion1: 'нітрат',
+                salt1: 'калій нітрат',
+                cation2: 'кальцій',
+                anion2: 'карбонат',
+                salt2: 'кальцій карбонат'
+            };
+
+            let correct = 0;
+            let total = 6;
+
+            for (let key in answers) {
+                const input = document.getElementById(key);
+                const value = input.value.toLowerCase().trim();
+                if (value.includes(answers[key])) {
+                    input.style.background = '#c8e6c9';
+                    correct++;
+                } else {
+                    input.style.background = '#ffcdd2';
+                }
+            }
+
+            const message = document.getElementById('namingSuccess');
+            message.textContent = `✓ Правильних відповідей: ${correct} з ${total}`;
+            message.classList.add('show');
+        }
+
+        // Block 5: Creative Zone
+        function showInfo(type) {
+            const info = {
+                salt: {
+                    icon: '🧂',
+                    title: 'Кухонна сіль',
+                    formula: 'NaCl',
+                    description: 'Найважливіша приправа в кулінарії! Використовується для приготування їжі, консервування овочів, засолювання риби та м\'яса. В організмі регулює водний баланс.'
+                },
+                soda: {
+                    icon: '🫧',
+                    title: 'Харчова сода',
+                    formula: 'NaHCO₃',
+                    description: 'Чудовий розпушувач для тіста! Також використовується як засіб для чищення посуду, усунення неприємних запахів, та навіть у медицині для полоскання горла.'
+                },
+                chalk: {
+                    icon: '✏️',
+                    title: 'Крейда',
+                    formula: 'CaCO₃',
+                    description: 'Природна гірська порода білого кольору. Використовується для письма на дошці, в будівництві для виготовлення цементу, як добавка до корму тварин для поповнення кальцію.'
+                },
+                gypsum: {
+                    icon: '🏗️',
+                    title: 'Гіпс',
+                    formula: 'CaSO₄·2H₂O',
+                    description: 'Універсальний матеріал! У медицині використовується для фіксації зламаних кісток (гіпсові пов\'язки). У будівництві - для оздоблювальних робіт, виготовлення ліпнини, вирівнювання стін.'
+                }
+            };
+
+            const data = info[type];
+            document.getElementById('modalIcon').textContent = data.icon;
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalFormula').textContent = data.formula;
+            document.getElementById('modalDescription').textContent = data.description;
+            document.getElementById('saltModal').classList.add('show');
+        }
+
+        function closeModal(event) {
+            if (event.target.classList.contains('modal') || event.target.classList.contains('modal-close')) {
+                document.getElementById('saltModal').classList.remove('show');
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.getElementById('saltModal').classList.remove('show');
+            }
+        });
+
+        // Block 6: Reflection
+        function selectEmoji(element, emoji) {
+            document.querySelectorAll('.emoji-btn').forEach(btn => {
+                btn.style.background = 'transparent';
+            });
+            element.style.background = '#c8e6c9';
+        }
+
+        function toggleReflection(element) {
+            element.classList.toggle('selected');
+        }
+    </script>
+</body>
+</html>
