@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детективи хімії: Справа загадкових солей</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 2px solid #ffd700;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #ffd700;
+        }
+
+        .header h1 {
+            color: #ffd700;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .detective-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #ddd;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 2px solid #ffd700;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #ffd700;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .welcome-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-screen h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .welcome-text {
+            color: #ddd;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            text-align: left;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            font-size: 1em;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #1e3c72;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .case-card {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #ffd700;
+            position: relative;
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .case-number {
+            font-size: 1.5em;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .case-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .case-status.open {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .case-status.solved {
+            background: #51cf66;
+            color: white;
+        }
+
+        .case-title {
+            font-size: 1.3em;
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .case-description {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            font-style: italic;
+            color: #ddd;
+            border-left: 4px solid #ffd700;
+        }
+
+        .hint-box {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #ffd700;
+            font-size: 0.9em;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #fff;
+        }
+
+        .option-btn.correct {
+            background: rgba(81, 207, 102, 0.3);
+            border-color: #51cf66;
+        }
+
+        .option-btn.incorrect {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: #ff6b6b;
+        }
+
+        .option-formula {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+
+        .option-name {
+            font-size: 0.9em;
+            color: #ddd;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: rgba(81, 207, 102, 0.3);
+            color: #51cf66;
+            border: 2px solid #51cf66;
+        }
+
+        .feedback.incorrect {
+            background: rgba(255, 107, 107, 0.3);
+            color: #ff6b6b;
+            border: 2px solid #ff6b6b;
+        }
+
+        .evidence {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .evidence h4 {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .evidence p {
+            color: #ddd;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .final-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .final-screen h2 {
+            color: #ffd700;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .detective-rank {
+            font-size: 3em;
+            margin: 30px 0;
+        }
+
+        .rank-title {
+            font-size: 2em;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+
+        .final-stats {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px solid #ffd700;
+        }
+
+        .final-stat {
+            font-size: 1.3em;
+            margin: 15px 0;
+            color: #ddd;
+        }
+
+        .final-stat strong {
+            color: #ffd700;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            margin: 10px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            height: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 2px solid #ffd700;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e3c72;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .case-card {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const CASES = [
+            {
+                id: 1,
+                title: "Таємниця розбитого дзеркала",
+                description: "У старовинному маєтку знайшли рецепт виготовлення дзеркал 19 століття. У рецепті зазначено таємничу речовину, яку в народі називали \"ляпіс\". Дослідження показали, що це сіль Аргентуму. Що це за речовина?",
+                hint: "💡 Підказка: Ця сіль має формулу AgNO₃ і використовувалась не тільки для дзеркал",
+                options: [
+                    { formula: "AgNO₃", name: "Аргентум(I) нітрат (ляпіс)", correct: true },
+                    { formula: "AgCl", name: "Аргентум(I) хлорид", correct: false },
+                    { formula: "Ag₂SO₄", name: "Аргентум(I) сульфат", correct: false },
+                    { formula: "AgBr", name: "Аргентум(I) бромід", correct: false }
+                ],
+                evidence: {
+                    title: "🔍 Докази у справі:",
+                    facts: [
+                        "AgNO₃ (ляпіс) здавна використовували для виготовлення дзеркал",
+                        "Солі Аргентуму можна використовувати для регулювання погоди",
+                        "AgI або AgBr розпилюють з літака - вони конденсують водяну пару і випадає дощ",
+                        "Аргентум нітрат - цінний реактив у хімічній лабораторії"
+                    ]
+                }
+            },
+            {
+                id: 2,
+                title: "Отруйна картина",
+                description: "У картинній галереї виявили старовинну ікону з яскраво-жовтою фарбою. Експерти підозрюють, що фарба містить отруйну сполуку арсену з сіркою. Хімічний аналіз показав формулу As₂S₃. Як називається ця небезпечна речовина?",
+                hint: "💡 Підказка: Ця речовина має назву, що асоціюється з золотом",
+                options: [
+                    { formula: "As₂S₃", name: "Арсен(III) сульфід (аурипігмент)", correct: true },
+                    { formula: "As₂O₃", name: "Арсен(III) оксид", correct: false },
+                    { formula: "FeS₂", name: "Ферум(II) дисульфід (пірит)", correct: false },
+                    { formula: "CuS", name: "Купрум(II) сульфід", correct: false }
+                ],
+                evidence: {
+                    title: "🔍 Докази у справі:",
+                    facts: [
+                        "As₂S₃ (аурипігмент) - цінний мінерал для виготовлення золотої та жовтої фарб",
+                        "Особливо поширений в іконописі завдяки яскравому кольору",
+                        "Надзвичайно отруйний - потрібна обережність при роботі",
+                        "Є сировиною для добування арсену в промисловості"
+                    ]
+                }
+            },
+            {
+                id: 3,
+                title: "Привид у темряві",
+                description: "Житель скаржиться: \"Вночі стіни моєї кімнати світяться зеленим світлом!\" Детективи виявили, що стіни пофарбовані фарбою на основі сульфіду цинку. Яка формула цієї \"чарівної\" речовини?",
+                hint: "💡 Підказка: Ця речовина має назву \"цинкова обманка\" або \"сфалерит\"",
+                options: [
+                    { formula: "ZnS", name: "Цинк сульфід (сфалерит)", correct: true },
+                    { formula: "ZnO", name: "Цинк оксид", correct: false },
+                    { formula: "ZnCl₂", name: "Цинк хлорид", correct: false },
+                    { formula: "ZnSO₄", name: "Цинк сульфат", correct: false }
+                ],
+                evidence: {
+                    title: "🔍 Докази у справі:",
+                    facts: [
+                        "ZnS (цинкова обманка, сфалерит) є сировиною для одержання цинку",
+                        "Зі сфалериту виготовляють цинкові білила для фарб",
+                        "Особливість: фарби на основі ZnS світяться в темряві (люмінесценція)",
+                        "Використовується у виробництві світлонакопичувальних матеріалів"
+                    ]
+                }
+            },
+            {
+                id: 4,
+                title: "Дивна погода",
+                description: "Метеорологи викликали дощ над посушливим регіоном, розпиливши з літака спеціальну речовину. Свідки бачили, як літак розпилював сіль Аргентуму. Яка сіль допомогла викликати дощ?",
+                hint: "💡 Підказка: Використовують галогенідні солі Аргентуму, найчастіше йодид",
+                options: [
+                    { formula: "AgI", name: "Аргентум(I) йодид", correct: true },
+                    { formula: "AgNO₃", name: "Аргентум(I) нітрат", correct: false },
+                    { formula: "Ag₂SO₄", name: "Аргентум(I) сульфат", correct: false },
+                    { formula: "Ag₂O", name: "Аргентум(I) оксид", correct: false }
+                ],
+                evidence: {
+                    title: "🔍 Докази у справі:",
+                    facts: [
+                        "AgI (аргентум йодид) або AgBr використовують для регулювання погоди",
+                        "Ці солі конденсують водяну пару в атмосфері",
+                        "Розпилення з літака призводить до утворення крапель і випадання дощу",
+                        "Метод називається \"засівання хмар\" (cloud seeding)"
+                    ]
+                }
+            },
+            {
+                id: 5,
+                title: "Проносна таємниця",
+                description: "У старій аптеці знайшли флакон з написом \"Глауберова сіль - універсальний лікарський засіб\". Хімічний аналіз показав, що це кристалогідрат сульфату натрію. Яка точна формула цієї солі?",
+                hint: "💡 Підказка: Це кристалогідрат з 10 молекулами води",
+                options: [
+                    { formula: "Na₂SO₄·10H₂O", name: "Натрій сульфат декагідрат (мірабіліт)", correct: true },
+                    { formula: "Na₂SO₄", name: "Натрій сульфат безводний", correct: false },
+                    { formula: "Na₂CO₃·10H₂O", name: "Натрій карбонат декагідрат", correct: false },
+                    { formula: "NaCl", name: "Натрій хлорид", correct: false }
+                ],
+                evidence: {
+                    title: "🔍 Докази у справі:",
+                    facts: [
+                        "Na₂SO₄·10H₂O (глауберова сіль, мірабіліт) - цінний реактив для лабораторій",
+                        "Використовується для виготовлення скла",
+                        "Має проносну (послаблювальну) дію - використовується як ліки",
+                        "Це характерно для всіх розчинних солей сульфатної кислоти"
+                    ]
+                }
+            },
+            {
+                id: 6,
+                title: "Будівельна загадка",
+                description: "На будівельному майданчику виявили велику партію білого порошку в мішках. Будівельники кажуть, що це для фіксації кісток у травмпункті та для оздоблення стін. Аналіз показав - це сульфат Кальцію. Як називається ця речовина?",
+                hint: "💡 Підказка: Ця речовина широко відома в будівництві та медицині",
+                options: [
+                    { formula: "CaSO₄", name: "Кальцій сульфат (гіпс)", correct: true },
+                    { formula: "CaCO₃", name: "Кальцій карбонат (вапняк)", correct: false },
+                    { formula: "CaCl₂", name: "Кальцій хлорид", correct: false },
+                    { formula: "Ca(OH)₂", name: "Кальцій гідроксид (гашене вапно)", correct: false }
+                ],
+                evidence: {
+                    title: "🔍 Докази у справі:",
+                    facts: [
+                        "CaSO₄ (гіпс) - природний мінерал, основа багатьох порід",
+                        "Широко використовується у будівництві для оздоблювальних робіт",
+                        "У медицині - для фіксації зламаних кінцівок (гіпсові пов'язки)",
+                        "При нагріванні втрачає воду і стає будівельним гіпсом"
+                    ]
+                }
+            },
+            {
+                id: 7,
+                title: "Чиста справа",
+                description: "Господиня скаржиться: \"Купила засіб для чищення посуду, а на етикетці тільки формула Na₂CO₃. Що це таке і чи безпечно це використовувати?\" Детективи встановили - це популярна побутова сіль. Як її називають?",
+                hint: "💡 Підказка: Цю речовину ще називають \"кальцинована сода\"",
+                options: [
+                    { formula: "Na₂CO₃", name: "Натрій карбонат (кальцинована сода)", correct: true },
+                    { formula: "NaHCO₃", name: "Натрій гідрокарбонат (харчова сода)", correct: false },
+                    { formula: "NaCl", name: "Натрій хлорид (кухонна сіль)", correct: false },
+                    { formula: "Na₂SO₄", name: "Натрій сульфат", correct: false }
+                ],
+                evidence: {
+                    title: "🔍 Докази у справі:",
+                    facts: [
+                        "Na₂CO₃ (кальциновану соду) одержують з природного мінералу",
+                        "Кристалічна сода має формулу Na₂CO₃·10H₂O",
+                        "Використовують для виготовлення скла, мила, пральних порошків",
+                        "Сода є ефективним засобом для чищення посуду - розчиняє жири"
+                    ]
+                }
+            },
+            {
+                id: 8,
+                title: "Кришталева таємниця",
+                description: "У склодувній майстерні виготовляють елітне оптичне скло та кришталь. Майстер розповідає: \"Секрет якості - у спеціальній солі Калію, яку ми додаємо до шихти\". Хімік визначив - це карбонат Калію. Як ще називають цю сіль?",
+                hint: "💡 Підказка: Стародавня назва цієї солі - \"поташ\"",
+                options: [
+                    { formula: "K₂CO₃", name: "Калій карбонат (поташ)", correct: true },
+                    { formula: "KCl", name: "Калій хлорид", correct: false },
+                    { formula: "KNO₃", name: "Калій нітрат (селітра)", correct: false },
+                    { formula: "K₂SO₄", name: "Калій сульфат", correct: false }
+                ],
+                evidence: {
+                    title: "🔍 Докази у справі:",
+                    facts: [
+                        "K₂CO₃ (поташ) використовують для виробництва мінеральних добрив",
+                        "Застосовується для виготовлення кришталю та оптичного скла",
+                        "Поташ покращує якість скла, робить його більш прозорим та міцним",
+                        "Історично видобували з деревної золи (звідси назва \"поташ\")"
+                    ]
+                }
+            }
+        ];
+
+        function ChemistryDetectiveQuest() {
+            const [stage, setStage] = useState('welcome');
+            const [detectiveName, setDetectiveName] = useState('');
+            const [currentCaseIndex, setCurrentCaseIndex] = useState(0);
+            const [solvedCases, setSolvedCases] = useState([]);
+            const [selectedAnswer, setSelectedAnswer] = useState(null);
+            const [showFeedback, setShowFeedback] = useState(false);
+            const [attempts, setAttempts] = useState(0);
+            const [score, setScore] = useState(0);
+
+            const currentCase = CASES[currentCaseIndex];
+            const totalCases = CASES.length;
+            const progress = (solvedCases.length / totalCases) * 100;
+
+            const startQuest = () => {
+                if (detectiveName.trim()) {
+                    setStage('quest');
+                }
+            };
+
+            const selectAnswer = (option) => {
+                if (showFeedback) return;
+                setSelectedAnswer(option);
+            };
+
+            const checkAnswer = () => {
+                if (!selectedAnswer) return;
+
+                setAttempts(attempts + 1);
+                setShowFeedback(true);
+
+                if (selectedAnswer.correct) {
+                    const points = attempts === 0 ? 100 : attempts === 1 ? 70 : 50;
+                    setScore(score + points);
+                    setSolvedCases([...solvedCases, currentCase.id]);
+
+                    setTimeout(() => {
+                        if (currentCaseIndex < totalCases - 1) {
+                            setCurrentCaseIndex(currentCaseIndex + 1);
+                            setSelectedAnswer(null);
+                            setShowFeedback(false);
+                            setAttempts(0);
+                        } else {
+                            setStage('final');
+                        }
+                    }, 3000);
+                }
+            };
+
+            const getDetectiveRank = () => {
+                const percentage = (score / (totalCases * 100)) * 100;
+                if (percentage >= 90) return { rank: "Легендарний Детектив", icon: "🏆", color: "#ffd700" };
+                if (percentage >= 75) return { rank: "Майстер-Детектив", icon: "🎖️", color: "#c0c0c0" };
+                if (percentage >= 60) return { rank: "Досвідчений Детектив", icon: "🔍", color: "#cd7f32" };
+                if (percentage >= 40) return { rank: "Детектив-Початківець", icon: "🕵️", color: "#999" };
+                return { rank: "Стажер Детектива", icon: "📋", color: "#666" };
+            };
+
+            const renderWelcome = () => (
+                <div className="welcome-screen">
+                    <div className="detective-icon">🕵️‍♂️</div>
+                    <h2>Вітаємо в Детективному Агентстві!</h2>
+                    <div className="welcome-text">
+                        <p><strong>📋 Справа №2024-CHEM</strong></p>
+                        <p>Шановний детективе!</p>
+                        <p>У місті відбулася серія загадкових подій, пов'язаних з хімічними речовинами. 
+                        Нам потрібен найкращий детектив, який розбирається в хімії солей!</p>
+                        <p><strong>Ваше завдання:</strong></p>
+                        <ul style={{ textAlign: 'left', marginLeft: '20px', marginTop: '10px' }}>
+                            <li>Розслідувати {totalCases} загадкових справ</li>
+                            <li>Знайти правильні солі в кожній справі</li>
+                            <li>Зібрати максимум балів за точність</li>
+                            <li>Отримати почесне звання детектива!</li>
+                        </ul>
+                        <p style={{ marginTop: '15px' }}><strong>Система оцінювання:</strong></p>
+                        <ul style={{ textAlign: 'left', marginLeft: '20px' }}>
+                            <li>🥇 Перша спроба: 100 балів</li>
+                            <li>🥈 Друга спроба: 70 балів</li>
+                            <li>🥉 Третя і далі: 50 балів</li>
+                        </ul>
+                    </div>
+                    <div className="input-group">
+                        <label>Представтеся, детективе:</label>
+                        <input
+                            type="text"
+                            value={detectiveName}
+                            onChange={(e) => setDetectiveName(e.target.value)}
+                            placeholder="Введіть ваше ім'я..."
+                            onKeyPress={(e) => e.key === 'Enter' && startQuest()}
+                        />
+                    </div>
+                    <button className="btn" onClick={startQuest} disabled={!detectiveName.trim()}>
+                        🔍 Розпочати розслідування
+                    </button>
+                </div>
+            );
+
+            const renderQuest = () => (
+                <div>
+                    <div className="stats-bar">
+                        <div className="stat-item">
+                            <div className="stat-label">Детектив</div>
+                            <div className="stat-value">🕵️ {detectiveName}</div>
+                        </div>
+                        <div className="stat-item">
+                            <div className="stat-label">Розкрито справ</div>
+                            <div className="stat-value">{solvedCases.length}/{totalCases}</div>
+                        </div>
+                        <div className="stat-item">
+                            <div className="stat-label">Рахунок</div>
+                            <div className="stat-value">⭐ {score}</div>
+                        </div>
+                    </div>
+
+                    <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: `${progress}%` }}>
+                            {Math.round(progress)}%
+                        </div>
+                    </div>
+
+                    <div className="case-card">
+                        <div className="case-header">
+                            <div className="case-number">
+                                📁 Справа #{currentCase.id}
+                            </div>
+                            <div className={`case-status ${solvedCases.includes(currentCase.id) ? 'solved' : 'open'}`}>
+                                {solvedCases.includes(currentCase.id) ? '✓ РОЗКРИТО' : '⚠ НА РОЗГЛЯДІ'}
+                            </div>
+                        </div>
+
+                        <div className="case-title">{currentCase.title}</div>
+
+                        <div className="case-description">
+                            {currentCase.description}
+                        </div>
+
+                        <div className="hint-box">
+                            {currentCase.hint}
+                        </div>
+
+                        <div className="options-grid">
+                            {currentCase.options.map((option, index) => (
+                                <div
+                                    key={index}
+                                    className={`option-btn ${
+                                        selectedAnswer === option ? 'selected' : ''
+                                    } ${
+                                        showFeedback && option.correct ? 'correct' : ''
+                                    } ${
+                                        showFeedback && selectedAnswer === option && !option.correct ? 'incorrect' : ''
+                                    }`}
+                                    onClick={() => selectAnswer(option)}
+                                >
+                                    <div className="option-formula">{option.formula}</div>
+                                    <div className="option-name">{option.name}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {!showFeedback && (
+                            <button 
+                                className="btn" 
+                                onClick={checkAnswer}
+                                disabled={!selectedAnswer}
+                            >
+                                🔍 Перевірити версію
+                            </button>
+                        )}
+
+                        {showFeedback && (
+                            <>
+                                <div className={`feedback ${selectedAnswer.correct ? 'correct' : 'incorrect'}`}>
+                                    {selectedAnswer.correct 
+                                        ? `✓ Вітаємо! Справу розкрито! Ви отримали ${attempts === 0 ? 100 : attempts === 1 ? 70 : 50} балів!` 
+                                        : `✗ Версія не підтвердилась. Спробуйте ще раз!`}
+                                </div>
+
+                                {selectedAnswer.correct && (
+                                    <div className="evidence">
+                                        <h4>{currentCase.evidence.title}</h4>
+                                        {currentCase.evidence.facts.map((fact, idx) => (
+                                            <p key={idx}>• {fact}</p>
+                                        ))}
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+            );
+
+            const renderFinal = () => {
+                const rank = getDetectiveRank();
+                const percentage = Math.round((score / (totalCases * 100)) * 100);
+
+                return (
+                    <div className="final-screen">
+                        <h2>🎉 Розслідування завершено!</h2>
+                        
+                        <div className="detective-rank" style={{ color: rank.color }}>
+                            {rank.icon}
+                        </div>
+                        
+                        <div className="rank-title" style={{ color: rank.color }}>
+                            {rank.rank}
+                        </div>
+
+                        <div className="final-stats">
+                            <div className="final-stat">
+                                <strong>Детектив:</strong> {detectiveName}
+                            </div>
+                            <div className="final-stat">
+                                <strong>Розкрито справ:</strong> {solvedCases.length} з {totalCases}
+                            </div>
+                            <div className="final-stat">
+                                <strong>Набрано балів:</strong> {score} з {totalCases * 100}
+                            </div>
+                            <div className="final-stat">
+                                <strong>Ефективність:</strong> {percentage}%
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 style={{ color: '#ffd700', marginBottom: '20px' }}>🏅 Отримані значки:</h3>
+                            {percentage >= 90 && <div className="badge">🏆 Ідеальний Детектив</div>}
+                            {percentage >= 75 && <div className="badge">⭐ Експерт з Солей</div>}
+                            {percentage >= 60 && <div className="badge">🔍 Уважний Слідопит</div>}
+                            {solvedCases.length === totalCases && <div className="badge">✅ Всі Справи Розкрито</div>}
+                            <div className="badge">🎓 Хімік-Детектив</div>
+                        </div>
+
+                        <button 
+                            className="btn" 
+                            style={{ marginTop: '30px' }}
+                            onClick={() => window.location.reload()}
+                        >
+                            🔄 Розпочати нове розслідування
+                        </button>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="container">
+                    <div className="header">
+                        <div className="detective-icon">🕵️‍♂️</div>
+                        <h1>Детективи Хімії</h1>
+                        <p className="subtitle">Справа загадкових солей</p>
+                    </div>
+
+                    {stage === 'welcome' && renderWelcome()}
+                    {stage === 'quest' && renderQuest()}
+                    {stage === 'final' && renderFinal()}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<ChemistryDetectiveQuest />, document.getElementById('root'));
+    </script>
+</body>
+</html>
