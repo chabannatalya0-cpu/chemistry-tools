@@ -49,6 +49,17 @@ h1{font-family:'Unbounded',sans-serif;font-weight:800;font-size:clamp(28px,6vw,4
 .det span{display:flex;align-items:center;gap:5px}
 .det i{width:8px;height:8px;border-radius:50%;display:block}
 
+.sec{font-family:'Unbounded',sans-serif;font-weight:800;font-size:20px;margin:26px 0 12px;text-align:center}
+.missions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mc{border-radius:18px;padding:14px 16px;background:rgba(255,255,255,.06);border:1.5px solid var(--line);border-top:5px solid var(--mc);display:flex;flex-direction:column;gap:6px}
+.mc h3{font-family:'Unbounded',sans-serif;font-size:16px;display:flex;gap:8px;align-items:center}
+.mc .n{font-family:'Unbounded',sans-serif;font-weight:800;font-size:30px;color:var(--gold);line-height:1}
+.mc .n small{font-family:'Nunito',sans-serif;font-size:13px;color:var(--muted);font-weight:800;margin-left:6px}
+.mc .ld{font-size:13.5px;font-weight:800;color:var(--muted)}
+.mc .ld b{color:#fff}
+.mc a{margin-top:4px;align-self:flex-start;color:var(--night);background:var(--gold);text-decoration:none;font-weight:900;font-size:13.5px;padding:7px 14px;border-radius:999px}
+.mc a:focus-visible{outline:3px solid #fff;outline-offset:2px}
+@media (max-width:720px){ .missions{grid-template-columns:repeat(2,minmax(0,1fr))} }
 .empty{text-align:center;padding:40px 16px;border:1.5px dashed var(--line);border-radius:20px;color:var(--muted);font-weight:800;font-size:16px;line-height:1.5}
 .foot{margin-top:22px;text-align:center;color:var(--muted);font-size:13px;font-weight:800;line-height:1.6}
 .foot button{font:inherit;color:var(--gold);background:none;border:0;cursor:pointer;text-decoration:underline}
@@ -79,6 +90,9 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-rad
     <div class="stat lead"><b id="leader">—</b><span id="leaderTxt">клас-лідер</span></div>
   </section>
 
+  <h2 class="sec">Місії тижня</h2>
+  <div class="missions" id="missions"></div>
+  <h2 class="sec">Рейтинг класів</h2>
   <div class="legend" id="legend"></div>
   <ol class="board" id="board" aria-live="polite"></ol>
 
@@ -91,12 +105,12 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-rad
 const API1 = 'https://script.google.com/macros/s/AKfycbwn9VhDfH-5O9NNx98Y3Js24drCyDZYQ4kzVLdzqBaWptSt31sdDojJjcNxi1cL7DUw5Q/exec';
 const API2 = 'https://script.google.com/macros/s/AKfycbxFXoKPNgzfi298sLQtSKrhaQ6RSSMqUhJU8XHYkKRYA__iA8L_bI2m2v9BxzOrvrQ/exec';
 const MISSIONS = [
-  { k:'chem', name:'Хімія',     api:API1, color:'var(--chem)' },
-  { k:'bio',  name:'Біологія',  api:API1, color:'var(--bio)' },
-  { k:'geo',  name:'Географія', api:API1, color:'var(--geo)' },
-  { k:'eco',  name:'Екологія',  api:API1, color:'var(--eco)' },
-  { k:'zbd',  name:'ЗБД',       api:API2, color:'var(--zbd)' },
-  { k:'phys', name:'Фізика',    api:API2, color:'var(--phys)' }
+  { k:'chem', name:'Хімія',     api:API1, color:'var(--chem)', ic:'🧪', url:'https://chabannatalya0-cpu.github.io/chemistry-tools/misiya-khimiya.html' },
+  { k:'bio',  name:'Біологія',  api:API1, color:'var(--bio)',  ic:'🌱', url:'https://chabannatalya0-cpu.github.io/chemistry-tools/misiya-biolohiya.html' },
+  { k:'geo',  name:'Географія', api:API1, color:'var(--geo)',  ic:'🧭', url:'https://chabannatalya0-cpu.github.io/chemistry-tools/misiya-heohrafiya.html' },
+  { k:'eco',  name:'Екологія',  api:API1, color:'var(--eco)',  ic:'🌿', url:'https://chabannatalya0-cpu.github.io/chemistry-tools/misiya-ekolohiya.html' },
+  { k:'zbd',  name:'ЗБД',       api:API2, color:'var(--zbd)',  ic:'❤️', url:'https://chabannatalya0-cpu.github.io/chemistry-tools/misiya-zbd.html' },
+  { k:'phys', name:'Фізика',    api:API2, color:'var(--phys)', ic:'⚡', url:'https://chabannatalya0-cpu.github.io/chemistry-tools/misiya-fizyka.html' }
 ];
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -122,6 +136,12 @@ function render(failed){
     .sort((a,b) => b.t - a.t || sortCls(a.c,b.c));
   const all = rows.reduce((s,r)=>s+r.t,0);
   $('#sumAll').textContent = all;
+  $('#missions').innerHTML = MISSIONS.map(m => {
+    const cl = Object.entries(last[m.k]||{}).reduce((acc,[c,n])=>{ const cc=normCls(c); if(cc) acc[cc]=(acc[cc]||0)+n; return acc; },{});
+    const best = Object.entries(cl).sort((a,b)=>b[1]-a[1]||sortCls(a[0],b[0]));
+    const ld = best.length ? `Лідер: <b>${esc(best[0][0])}</b> · ${best[0][1]}` : 'Поки що без лідера';
+    return `<div class="mc" style="--mc:${m.color}"><h3><span aria-hidden="true">${m.ic}</span>${m.name}</h3><div class="n">${perM[m.k]}<small>рятувальників</small></div><div class="ld">${ld}</div><a href="${m.url}" target="_blank" rel="noopener">Пройти місію</a></div>`;
+  }).join('');
   $('#legend').innerHTML = MISSIONS.map(m=>`<span><i style="background:${m.color}"></i>${m.name} <em>${perM[m.k]}</em></span>`).join('');
   if (rows.length){
     const tie = rows.filter(r=>r.t===rows[0].t).map(r=>r.c);
