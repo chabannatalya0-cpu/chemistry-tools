@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Сузір'я класів</title>
+<meta name="description" content="Живе табло тижня природничих наук ліцею «Сузір'я»: скільки учнів кожного класу пройшли місії">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Unbounded:wght@600;800&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{
+  --night:#0D1D3F; --ink:#13294B; --ink-2:#1F3E73; --gold:#FFC83D; --gold-l:#FFE08A;
+  --text:#fff; --muted:rgba(255,255,255,.68); --line:rgba(255,255,255,.12);
+  --chem:#3D8BFD; --geo:#F08C2E; --eco:#2EBD6B; --zbd:#E2554B; --phys:#9B5DE5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--night)}
+body{font-family:'Nunito',system-ui,sans-serif;color:var(--text);min-height:100vh;
+  background:radial-gradient(1200px 600px at 50% 115%,rgba(255,200,61,.22),transparent 60%),linear-gradient(180deg,#0A1734 0%,#13294B 60%,#1F3E73 100%);background-attachment:fixed}
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:28px 16px 48px}
+header{text-align:center;margin-bottom:22px}
+.kicker{color:var(--gold);font-weight:900;font-size:14px}
+h1{font-family:'Unbounded',sans-serif;font-weight:800;font-size:clamp(28px,6vw,48px);line-height:1.05;margin:8px 0 10px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-weight:800;font-size:15px}
+
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
+.stat{border:1.5px solid var(--line);border-radius:20px;padding:18px 20px;background:rgba(255,255,255,.05)}
+.stat b{display:block;font-family:'Unbounded',sans-serif;font-size:clamp(34px,7vw,54px);line-height:1;color:var(--gold)}
+.stat span{display:block;margin-top:8px;font-weight:800;color:var(--muted);font-size:14px}
+.stat.lead b{color:#fff}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:center;margin:0 0 16px}
+.legend span{display:flex;align-items:center;gap:7px;font-weight:800;font-size:13.5px;color:var(--muted)}
+.legend i{width:12px;height:12px;border-radius:50%;display:block}
+.legend em{font-style:normal;color:#fff}
+
+.board{list-style:none;display:grid;gap:10px}
+.row{display:grid;grid-template-columns:44px 74px 1fr 58px;gap:12px;align-items:center;border-radius:16px;padding:10px 14px;background:rgba(255,255,255,.05);border:1.5px solid var(--line)}
+.row.top{border-color:rgba(255,200,61,.6);background:rgba(255,200,61,.09)}
+.place{font-family:'Unbounded',sans-serif;font-weight:800;font-size:16px;text-align:center;color:var(--muted)}
+.row.top .place{font-size:24px}
+.cls{font-family:'Unbounded',sans-serif;font-weight:800;font-size:19px}
+.bar{display:flex;height:22px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.07)}
+.bar i{display:block;height:100%;transition:width .8s ease}
+.total{font-family:'Unbounded',sans-serif;font-weight:800;font-size:20px;text-align:right;color:var(--gold)}
+.det{grid-column:3 / 5;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;font-weight:800;color:var(--muted);margin-top:-4px}
+.det span{display:flex;align-items:center;gap:5px}
+.det i{width:8px;height:8px;border-radius:50%;display:block}
+
+.empty{text-align:center;padding:40px 16px;border:1.5px dashed var(--line);border-radius:20px;color:var(--muted);font-weight:800;font-size:16px;line-height:1.5}
+.foot{margin-top:22px;text-align:center;color:var(--muted);font-size:13px;font-weight:800;line-height:1.6}
+.foot button{font:inherit;color:var(--gold);background:none;border:0;cursor:pointer;text-decoration:underline}
+.warn{color:#FFB4A8}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+
+@media (max-width:560px){
+  .row{grid-template-columns:30px 56px 1fr 44px;gap:8px;padding:10px}
+  .cls{font-size:16px} .total{font-size:17px} .place{font-size:14px}
+  .row.top .place{font-size:20px}
+  .det{grid-column:1 / 5;margin-top:0}
+  .stat{padding:14px}
+}
+@media (prefers-reduced-motion:reduce){ .bar i{transition:none} }
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<main class="wrap">
+  <header>
+    <div class="kicker">Тиждень природничих наук · ліцей «Сузір'я»</div>
+    <h1>Сузір'я класів</h1>
+    <p class="sub">Скільки рятувальників кожного класу пройшли місії</p>
+  </header>
+
+  <section class="hero" aria-label="Підсумок">
+    <div class="stat"><b id="sumAll">—</b><span>місій уже врятовано</span></div>
+    <div class="stat lead"><b id="leader">—</b><span id="leaderTxt">клас-лідер</span></div>
+  </section>
+
+  <div class="legend" id="legend"></div>
+  <ol class="board" id="board" aria-live="polite"></ol>
+
+  <p class="foot"><span id="upd">Завантаження…</span><br>Табло оновлюється саме щохвилини · <button id="reload">Оновити зараз</button></p>
+</main>
+
+<script>
+(() => {
+'use strict';
+const API1 = 'https://script.google.com/macros/s/AKfycbwn9VhDfH-5O9NNx98Y3Js24drCyDZYQ4kzVLdzqBaWptSt31sdDojJjcNxi1cL7DUw5Q/exec';
+const API2 = 'https://script.google.com/macros/s/AKfycbxFXoKPNgzfi298sLQtSKrhaQ6RSSMqUhJU8XHYkKRYA__iA8L_bI2m2v9BxzOrvrQ/exec';
+const MISSIONS = [
+  { k:'chem', name:'Хімія',     api:API1, color:'var(--chem)' },
+  { k:'geo',  name:'Географія', api:API1, color:'var(--geo)' },
+  { k:'eco',  name:'Екологія',  api:API1, color:'var(--eco)' },
+  { k:'zbd',  name:'ЗБД',       api:API2, color:'var(--zbd)' },
+  { k:'phys', name:'Фізика',    api:API2, color:'var(--phys)' }
+];
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let last = {}; // k -> classes, зберігаємо попередні дані, якщо запит не вдався
+
+async function getOne(m){
+  const ctl = new AbortController(); const t = setTimeout(()=>ctl.abort(), 15000);
+  try{
+    const r = await fetch(m.api + '?s=' + m.k, { signal: ctl.signal });
+    const j = await r.json();
+    if (j && j.ok && j.classes){ last[m.k] = j.classes; return true; }
+  }catch(e){} finally{ clearTimeout(t); }
+  return false;
+}
+function normCls(c){ return String(c).trim().toUpperCase().replace(/\s+/g,'').replace(/[–—]/g,'-'); }
+function sortCls(a,b){ const na=parseInt(a), nb=parseInt(b); return na!==nb ? na-nb : a.localeCompare(b,'uk'); }
+
+function render(failed){
+  const by = {}; const perM = {};
+  MISSIONS.forEach(m => { perM[m.k]=0; Object.entries(last[m.k]||{}).forEach(([c,n]) => {
+    const cc = normCls(c); if(!cc) return; by[cc] = by[cc] || {}; by[cc][m.k] = (by[cc][m.k]||0) + n; perM[m.k] += n; }); });
+  const rows = Object.entries(by).map(([c,v]) => ({ c, v, t: MISSIONS.reduce((s,m)=>s+(v[m.k]||0),0) }))
+    .sort((a,b) => b.t - a.t || sortCls(a.c,b.c));
+  const all = rows.reduce((s,r)=>s+r.t,0);
+  $('#sumAll').textContent = all;
+  $('#legend').innerHTML = MISSIONS.map(m=>`<span><i style="background:${m.color}"></i>${m.name} <em>${perM[m.k]}</em></span>`).join('');
+  if (rows.length){
+    const tie = rows.filter(r=>r.t===rows[0].t).map(r=>r.c);
+    $('#leader').textContent = tie.length>2 ? tie.slice(0,2).join(', ')+'…' : tie.join(', ');
+    $('#leaderTxt').textContent = tie.length>1 ? `лідирують разом · ${rows[0].t} місій` : `клас-лідер · ${rows[0].t} місій`;
+  } else { $('#leader').textContent = '?'; $('#leaderTxt').textContent = 'лідера ще немає'; }
+  const max = rows.length ? rows[0].t : 1;
+  let place = 0, prev = null;
+  $('#board').innerHTML = rows.length ? rows.map((r,i) => {
+    if (r.t !== prev){ place = i+1; prev = r.t; }
+    const medal = place===1?'🥇':place===2?'🥈':place===3?'🥉':place;
+    const segs = MISSIONS.map(m => r.v[m.k] ? `<i style="width:${r.v[m.k]/max*100}%;background:${m.color}" title="${m.name}: ${r.v[m.k]}"></i>` : '').join('');
+    const det = MISSIONS.filter(m=>r.v[m.k]).map(m=>`<span><i style="background:${m.color}"></i>${m.name} ${r.v[m.k]}</span>`).join('');
+    return `<li class="row${place<=3?' top':''}"><div class="place" aria-label="Місце ${place}">${medal}</div><div class="cls">${esc(r.c)}</div>
+      <div class="bar" role="img" aria-label="${esc(r.c)}: ${r.t} місій">${segs}</div><div class="total">${r.t}</div><div class="det">${det}</div></li>`;
+  }).join('') : `<li class="empty">Ще жоден клас не завершив місію.<br>Стань першим рятувальником — і твій клас засвітиться тут!</li>`;
+  const tm = new Date().toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'});
+  $('#upd').innerHTML = failed ? `<span class="warn">Не всі дані вдалося оновити о ${tm}, показано останні отримані.</span>` : `Оновлено о ${tm}`;
+}
+async function refresh(){
+  const res = await Promise.all(MISSIONS.map(getOne));
+  render(res.some(ok=>!ok));
+}
+$('#reload').addEventListener('click', refresh);
+refresh(); setInterval(refresh, 60000);
+
+/* зоряне небо */
+const cv = $('#sky'), ctx = cv.getContext('2d'); let stars = [];
+function sky(){
+  cv.width = innerWidth*devicePixelRatio; cv.height = innerHeight*devicePixelRatio;
+  stars = Array.from({length:Math.round(innerWidth*innerHeight/9000)}, ()=>({x:Math.random()*cv.width,y:Math.random()*cv.height*0.85,r:(Math.random()*1.4+.3)*devicePixelRatio,a:Math.random()*.6+.2}));
+  ctx.clearRect(0,0,cv.width,cv.height); stars.forEach(s=>{ ctx.globalAlpha=s.a; ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,7); ctx.fill(); });
+}
+addEventListener('resize', sky); sky();
+})();
+</script>
+</body>
+</html>
