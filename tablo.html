@@ -12,7 +12,7 @@
 :root{
   --night:#0D1D3F; --ink:#13294B; --ink-2:#1F3E73; --gold:#FFC83D; --gold-l:#FFE08A;
   --text:#fff; --muted:rgba(255,255,255,.68); --line:rgba(255,255,255,.12);
-  --chem:#3D8BFD; --geo:#F08C2E; --eco:#2EBD6B; --zbd:#E2554B; --phys:#9B5DE5;
+  --chem:#3D8BFD; --geo:#F08C2E; --eco:#2EBD6B; --zbd:#E2554B; --phys:#9B5DE5; --bio:#F2C230;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{background:var(--night)}
@@ -92,6 +92,7 @@ const API1 = 'https://script.google.com/macros/s/AKfycbwn9VhDfH-5O9NNx98Y3Js24dr
 const API2 = 'https://script.google.com/macros/s/AKfycbxFXoKPNgzfi298sLQtSKrhaQ6RSSMqUhJU8XHYkKRYA__iA8L_bI2m2v9BxzOrvrQ/exec';
 const MISSIONS = [
   { k:'chem', name:'Хімія',     api:API1, color:'var(--chem)' },
+  { k:'bio',  name:'Біологія',  api:API1, color:'var(--bio)' },
   { k:'geo',  name:'Географія', api:API1, color:'var(--geo)' },
   { k:'eco',  name:'Екологія',  api:API1, color:'var(--eco)' },
   { k:'zbd',  name:'ЗБД',       api:API2, color:'var(--zbd)' },
