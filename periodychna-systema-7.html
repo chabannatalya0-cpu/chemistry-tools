@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Будова Періодичної системи — 7 клас</title>
+<meta name="description" content="Інтерактивний робочий аркуш з хімії для 7 класу: будова Періодичної системи хімічних елементів з автоматичною перевіркою.">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#ECEAF8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='12' fill='%23FFB6D2' stroke='%23EE6C9C' stroke-width='4'/%3E%3Ctext x='32' y='43' font-family='Arial' font-weight='700' font-size='28' text-anchor='middle' fill='%231F2A6B'%3ENa%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1F2A6B; --ink-2:#4A5591; --muted:#6E7499;
+  --page:#ECEAF8; --paper:#FFFFFF;
+  --pink:#FFB6D2; --pink-e:#EE6C9C; --pink-t:#FFF1F7;
+  --yel:#FFE17D;  --yel-e:#E9B52A;  --yel-t:#FFF8DE;
+  --blue:#93D9F7; --blue-e:#3AAEE2; --blue-t:#E8F7FD;
+  --lav:#D9CEFF;  --lav-e:#9E87F0;  --lav-t:#F5F0FF;
+  --mint:#BFEBDD; --mint-e:#3DBE98; --mint-t:#EBF9F3;
+  --ok:#1E9C5A; --ok-t:#DFF6E9; --bad:#DE3F4C; --bad-t:#FDE6E8; --warn:#A86A12;
+  --focus:#6C4CF1;
+  --c:50px; --gap:4px; --lab:112px;
+  --hand:'Caveat','Segoe Print','Comic Sans MS',cursive;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:64px}
+body{margin:0;background:var(--page);color:var(--ink);font:600 17px/1.5 'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+button,select,input{font:inherit;color:inherit}
+button{-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+/* ---------- Верхня панель ---------- */
+.bar{position:sticky;top:0;z-index:40;background:rgba(236,234,248,.92);-webkit-backdrop-filter:saturate(1.4) blur(8px);backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid rgba(31,42,107,.08)}
+.bar-in{max-width:1200px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:12px}
+.bar-title{font-weight:900;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.dots{display:flex;gap:6px;margin-left:auto}
+.dot{width:30px;height:30px;border-radius:50%;border:2px solid #C9C6E6;background:#fff;font-weight:900;font-size:13px;cursor:pointer;color:var(--ink-2);padding:0;line-height:1}
+.dot.part{border-color:#F0B429;background:#FFF3D6;color:var(--warn)}
+.dot.done{border-color:var(--ok);background:var(--ok);color:#fff}
+.bar-btn{display:inline-flex;align-items:center;gap:6px;border:2px solid var(--lav-e);background:var(--lav);border-radius:999px;padding:5px 13px 5px 10px;font-weight:900;font-size:14px;cursor:pointer;white-space:nowrap}
+.bar-btn svg{width:18px;height:18px}
+@media (max-width:600px){
+  .bar-title{display:none}
+  .bar-in{padding:7px 10px;gap:8px}
+  .dots{margin-left:0;gap:5px}
+  .dot{width:28px;height:28px}
+  .bar-btn{margin-left:auto;padding:5px 11px 5px 9px}
+}
+
+/* ---------- Аркуш ---------- */
+.sheet{max-width:1200px;margin:18px auto 40px;background:var(--paper);border-radius:28px;padding:30px 30px 36px;box-shadow:0 1px 0 rgba(31,42,107,.05),0 24px 48px -28px rgba(31,42,107,.35)}
+@media (max-width:640px){.sheet{margin:10px 8px 28px;padding:20px 14px 24px;border-radius:20px}}
+
+.title{margin:0;display:flex;align-items:center;justify-content:center;gap:10px}
+.pill{display:inline-block;background:var(--lav);border:3px solid var(--lav-e);border-radius:999px;padding:8px 30px 11px;font-weight:900;font-size:clamp(22px,3.6vw,38px);line-height:1.15;letter-spacing:-.01em;text-align:center;box-shadow:0 5px 0 var(--lav-e)}
+.spark{flex:none;width:40px;height:44px}
+.spark.r{transform:scaleX(-1)}
+@media (max-width:640px){.spark{width:26px;height:30px}.pill{padding:8px 18px 10px}}
+.sub{text-align:center;margin:14px 0 0;color:var(--muted);font-weight:800}
+
+.who{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;margin:18px auto 4px;max-width:760px}
+.who-f{display:flex;align-items:flex-end;gap:10px;font-weight:800;color:var(--ink-2);flex:1 1 330px;font-size:16px;min-width:0;white-space:nowrap}
+.who-f.small{flex:0 1 170px}
+.line-in{flex:1 1 0;width:0;min-width:0;border:0;border-bottom:2px dashed #B9B5DD;background:transparent;font:700 27px/1.1 var(--hand);color:var(--ink);padding:2px 4px;border-radius:0}
+.line-in:focus{outline:none;border-bottom:2px solid var(--focus);background:#F7F5FF}
+.who-f.need .line-in{border-bottom-color:var(--bad);background:var(--bad-t)}
+.howto{max-width:780px;margin:14px auto 0;text-align:center;color:var(--ink-2);font-size:15px;font-weight:700}
+
+/* ---------- Блоки завдань ---------- */
+.boxes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:26px;align-items:start}
+@media (max-width:860px){.boxes{grid-template-columns:minmax(0,1fr)}}
+.box{position:relative;border:2.5px solid var(--e);background:var(--t);border-radius:22px;padding:18px 20px 16px;scroll-margin-top:64px}
+.box.y{--e:var(--yel-e);--t:var(--yel-t);--f:var(--yel);--rule:#F1DFA4}
+.box.p{--e:var(--pink-e);--t:var(--pink-t);--f:var(--pink);--rule:#F6C9DB}
+.box.b{--e:var(--blue-e);--t:var(--blue-t);--f:var(--blue);--rule:#BEE4F3}
+.box.l{--e:var(--lav-e);--t:var(--lav-t);--f:var(--lav);--rule:#DCD0FA}
+.box.t{--e:#CFCBEA;--t:#FFFFFF;--f:var(--lav);--rule:#E4E0F6}
+.box.m{--e:var(--mint-e);--t:var(--mint-t);--f:var(--mint);--rule:#C3E9DC}
+#task5,#task6{margin-top:22px}
+@media (max-width:640px){.box{padding:16px 13px 14px;border-radius:18px}}
+.box-h{margin:0;display:flex;align-items:center;gap:10px;font-size:19px;font-weight:900;line-height:1.25}
+.box>.box-h,.box>.tip{padding-right:84px}
+@media (max-width:640px){.box>.box-h,.box>.tip{padding-right:62px}}
+.num{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--f);border:2.5px solid var(--e);font-size:16px}
+.tip{margin:6px 0 12px;color:var(--ink-2);font-size:15px;font-weight:700}
+.sub-h{margin:16px 0 6px;font-size:16px;font-weight:900}
+.note{margin:6px 0 0;color:var(--muted);font-size:14px;font-weight:700}
+
+/* банк слів */
+.bank{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,.8);border:2px dashed var(--e);margin-bottom:10px;min-height:54px;align-items:center}
+.bank.nudge{animation:nudge .45s ease}
+.bank .empty-msg{display:none;color:var(--muted);font-weight:700;font-size:14px;padding:4px 6px}
+.bank.all-used .empty-msg{display:block}
+@keyframes nudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.chip{border:2px solid var(--e);background:#fff;border-radius:999px;padding:6px 14px;font-weight:800;font-size:15px;line-height:1.2;cursor:grab;box-shadow:0 3px 0 var(--e);touch-action:manipulation;-webkit-user-select:none;user-select:none;transition:transform .12s,box-shadow .12s,background .12s}
+.chip:hover{transform:translateY(-1px)}
+.chip.picked{background:var(--f);transform:translateY(-2px);box-shadow:0 5px 0 var(--e)}
+.chip.used{display:none}
+.chip.dragging{opacity:.45}
+
+/* рядки й поля */
+.lines{margin:0;padding:0;list-style:none}
+.lines>li,.lines>p{margin:0;padding:9px 2px 7px;border-bottom:1.5px solid var(--rule);line-height:2.15}
+.slot{position:relative;display:inline-flex;align-items:flex-end;justify-content:center;vertical-align:baseline;min-width:150px;min-height:36px;max-width:100%;padding:0 10px 2px;margin:2px;border:0;border-bottom:2.5px dashed rgba(31,42,107,.42);background:rgba(255,255,255,.7);border-radius:8px 8px 0 0;font:700 25px/1.05 var(--hand);color:var(--ink);cursor:pointer;text-align:center;white-space:normal;transition:background .15s}
+.slot.s{min-width:72px}
+.slot:empty::before{content:'…';color:rgba(31,42,107,.28)}
+.box.armed .slot:not(.ok){background:#fff;box-shadow:inset 0 0 0 2px var(--e);animation:glow 1.1s ease-in-out infinite}
+.slot.over{background:var(--f)!important}
+@keyframes glow{50%{box-shadow:inset 0 0 0 2px var(--e),0 0 0 4px rgba(108,76,241,.12)}}
+.fw{position:relative;display:inline-block;vertical-align:baseline;margin:2px;max-width:100%}
+.fw.block{display:block;margin:6px 0 2px}
+.fw.block .sel{width:100%}
+.sel{-webkit-appearance:none;appearance:none;border:0;border-bottom:2.5px dashed rgba(31,42,107,.42);border-radius:8px 8px 0 0;background:rgba(255,255,255,.7) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.5 6 6l4.5-4.5' fill='none' stroke='%234A5591' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 9px center/12px 8px;padding:2px 30px 2px 10px;min-height:36px;min-width:76px;max-width:100%;font:700 25px/1.05 var(--hand);color:var(--ink);cursor:pointer}
+.sel option{font:700 16px 'Nunito',system-ui,sans-serif;color:#1F2A6B}
+.sel.empty{color:rgba(31,42,107,.4)}
+.sel:disabled{opacity:1;color:var(--ink);-webkit-text-fill-color:var(--ink);cursor:default;background-image:none;padding-right:12px}
+.sym{width:78px;text-align:center;border:0;border-bottom:2.5px dashed rgba(31,42,107,.42);background:rgba(255,255,255,.7);border-radius:8px 8px 0 0;font:700 31px/1 var(--hand);padding:2px 6px;color:var(--ink)}
+.sym:focus{outline:none;border-bottom:2.5px solid var(--focus);background:#fff}
+.sym::placeholder{color:rgba(31,42,107,.28)}
+
+/* статуси перевірки */
+.slot.ok,.fw.ok>.sel,.fw.ok>.sym{border-bottom:2.5px solid var(--ok);background-color:var(--ok-t);cursor:default}
+.slot.bad,.fw.bad>.sel,.fw.bad>.sym{border-bottom:2.5px solid var(--bad);background-color:var(--bad-t)}
+.slot.ok::after,.fw.ok::after,.slot.bad::after,.fw.bad::after{position:absolute;top:-9px;right:-9px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font:900 12px/1 'Nunito',system-ui,sans-serif;color:#fff;box-shadow:0 0 0 2px #fff;z-index:2}
+.slot.ok::after,.fw.ok::after{content:'✓';background:var(--ok)}
+.slot.bad::after,.fw.bad::after{content:'✗';background:var(--bad)}
+.flash{animation:flash .9s ease 2}
+@keyframes flash{50%{background-color:#FFE7A3}}
+
+.check-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+.check{border:0;border-radius:14px;background:var(--ink);color:#fff;font-weight:900;font-size:16px;padding:10px 22px;cursor:pointer;box-shadow:0 4px 0 #0E1648;transition:transform .08s,box-shadow .08s}
+.check:active{transform:translateY(2px);box-shadow:0 2px 0 #0E1648}
+.check:disabled{background:var(--ok);box-shadow:0 4px 0 #13703F;cursor:default;transform:none}
+.verdict{margin:0;font-weight:800;font-size:15px;flex:1 1 230px;line-height:1.35}
+.verdict.ok{color:var(--ok)}.verdict.bad{color:var(--bad)}.verdict.warn{color:var(--warn)}
+.verdict .hint{display:block;margin-top:4px;font-weight:700;color:var(--ink-2)}
+
+/* печатка */
+.stamp{position:absolute;top:-22px;right:-16px;width:108px;height:108px;border-radius:50%;border:4px solid var(--ok);color:var(--ok);display:grid;place-items:center;text-align:center;font:900 14px/1.05 'Nunito',system-ui,sans-serif;background:rgba(255,255,255,.94);transform:rotate(-14deg) scale(.3);opacity:0;pointer-events:none;z-index:5}
+.stamp::before{content:'';position:absolute;inset:5px;border-radius:50%;border:2px dashed var(--ok)}
+.stamp small{display:block;font-size:20px;line-height:1;margin-bottom:2px}
+.box.done .stamp{opacity:1;transform:rotate(-14deg) scale(1);transition:transform .38s cubic-bezier(.2,1.7,.4,1),opacity .15s}
+.box.done.still .stamp{transition:none}
+@media (max-width:640px){.stamp{width:86px;height:86px;font-size:11.5px;top:-16px;right:-9px}.stamp small{font-size:16px}}
+
+/* ---------- Клітинка (завдання 2) ---------- */
+.cellwrap{display:grid;grid-template-columns:128px minmax(0,1fr);grid-template-rows:minmax(46px,auto) minmax(66px,auto) minmax(42px,auto) minmax(46px,auto);column-gap:6px;margin:8px 0 6px}
+.bc-bg{grid-row:1/5;grid-column:1;background:var(--pink);border:3px solid var(--pink-e);border-radius:18px;box-shadow:0 5px 0 var(--pink-e)}
+.bc{grid-column:1;z-index:1;align-self:center;padding:0 12px;font-weight:900;text-align:center;line-height:1}
+.bc-z{text-align:left;font-size:24px}
+.bc-s{font-size:50px;letter-spacing:-.02em}
+.bc-n{font-size:18px;font-weight:800}
+.bc-m{font-size:18px;font-weight:800}
+.bl{grid-column:2;display:flex;align-items:center;gap:4px;min-width:0}
+.bl .arr{flex:none;width:34px;height:14px;color:var(--ink-2)}
+.bl .slot{flex:1;min-width:0;font-size:23px}
+@media (max-width:420px){.cellwrap{grid-template-columns:104px minmax(0,1fr)}.bc-s{font-size:42px}.bc-n,.bc-m{font-size:16px}.bl .arr{width:22px}}
+
+/* ---------- Кольори (завдання 4) ---------- */
+.legend{list-style:none;margin:0;padding:0}
+.legend li{display:flex;align-items:center;gap:12px;padding:7px 2px;border-bottom:1.5px solid var(--rule)}
+.legend .fw{flex:1;min-width:0}
+.legend .sel{width:100%}
+.sw{flex:none;width:36px;height:36px;border-radius:9px;border:2.5px solid}
+.sw.m{background:var(--pink);border-color:var(--pink-e);box-shadow:0 3px 0 var(--pink-e)}
+.sw.n{background:var(--yel);border-color:var(--yel-e);box-shadow:0 3px 0 var(--yel-e)}
+.sw.i{background:var(--blue);border-color:var(--blue-e);box-shadow:0 3px 0 var(--blue-e)}
+.sw.f{background:var(--lav);border-color:var(--lav-e);box-shadow:0 3px 0 var(--lav-e)}
+
+/* ---------- Будова (завдання 3) ---------- */
+.counts{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.counts label{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 2px;border-bottom:1.5px solid var(--rule);font-weight:800;font-size:16px}
+.counts.wide{grid-template-columns:1fr}
+.box.b .sub-h:first-of-type{margin-top:4px}
+@media (max-width:420px){.counts{grid-template-columns:1fr}}
+
+/* ---------- Таблиця ---------- */
+.pt-scroll{overflow-x:auto;overflow-y:hidden;margin:6px -8px 0;padding:14px 8px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.pt{display:grid;grid-template-columns:var(--lab) repeat(18,var(--c));grid-template-rows:46px 24px repeat(7,var(--c)) 14px repeat(2,var(--c));gap:var(--gap);width:max-content;margin:0 auto}
+.el{position:relative;border-radius:calc(var(--c) * .17);border:2px solid;display:grid;place-items:center;color:var(--ink)}
+.el.m{background:var(--pink);border-color:var(--pink-e);box-shadow:0 2px 0 var(--pink-e)}
+.el.n{background:var(--yel);border-color:var(--yel-e);box-shadow:0 2px 0 var(--yel-e)}
+.el.i{background:var(--blue);border-color:var(--blue-e);box-shadow:0 2px 0 var(--blue-e)}
+.el.f{background:var(--lav);border-color:var(--lav-e);box-shadow:0 2px 0 var(--lav-e)}
+.el b{font-weight:900;font-size:calc(var(--c) * .40);line-height:1;letter-spacing:-.02em;margin-top:calc(var(--c) * .14)}
+.el i{position:absolute;top:2px;left:4px;font-style:normal;font-weight:800;font-size:calc(var(--c) * .21);line-height:1;opacity:.72}
+.el.ph span{font-size:calc(var(--c) * .23);font-weight:900;line-height:1.05;text-align:center}
+.gnum{align-self:end;text-align:center;font-weight:900;font-size:14px;color:var(--ink-2);line-height:1}
+.pnum{display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-weight:900;font-size:15px;color:var(--ink-2)}
+.pbr{justify-self:end;width:10px;margin:5px 22px 5px 0;border:2px solid var(--ink-2);border-right:0;border-radius:9px 0 0 9px}
+.plab{display:flex;align-items:flex-end;justify-content:flex-end}
+.plab .slot{min-width:0;width:100%;font-size:22px;min-height:34px;padding:0 4px 1px}
+.gbr{position:relative;display:flex;align-items:center}
+.gbr::before{content:'';position:absolute;left:0;right:0;top:50%;bottom:-4px;border:2px solid var(--ink-2);border-bottom:0;border-radius:10px 10px 0 0}
+.gbr .slot{position:relative;z-index:1;flex:none;min-width:150px;margin-left:18px;font-size:23px;min-height:36px}
+.fnote{display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-weight:800;font-size:12.5px;color:var(--muted);text-align:right;line-height:1.1}
+.fslot{display:flex;align-items:center;min-width:0}
+.fslot .slot{min-width:0;width:100%;font-size:22px;min-height:36px;padding:0 4px 1px}
+/* рамки для підписів на таблиці */
+.pt .slot{border:2px dashed var(--lav-e);border-radius:10px;background:var(--lav-t);padding-bottom:3px}
+.pt .slot.ok{border:2px solid var(--ok);background:var(--ok-t)}
+.pt .slot.bad{border:2px solid var(--bad);background:var(--bad-t)}
+.box.armed .pt .slot:not(.ok){background:#fff;border-color:var(--focus)}
+.swipe{display:none;margin:2px 0 0;font-size:13px;color:var(--muted);font-weight:700;text-align:right}
+@media (max-width:1099px){:root{--c:42px;--lab:104px}}
+@media (max-width:900px){.swipe{display:block}}
+@media (max-width:760px){:root{--c:36px;--gap:3px;--lab:96px}.gbr .slot{min-width:130px}}
+
+/* ---------- Адреса (завдання 6) ---------- */
+.addr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.addr{display:flex;gap:12px;align-items:center;background:#fff;border:2px solid var(--rule);border-radius:16px;padding:10px 12px}
+.mini{flex:none;--c:58px;width:58px;height:58px}
+.addr-body{min-width:0}
+.addr-name{margin:0 0 2px;font-weight:900;font-size:17px}
+.addr label{display:inline-flex;align-items:center;gap:6px;margin:0 8px 0 0;font-weight:800;font-size:15px;color:var(--ink-2)}
+.addr .sel{min-width:58px;padding-right:26px}
+@media (max-width:640px){.addr-grid{grid-template-columns:1fr}}
+.house-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.house{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--rule);border-radius:16px;padding:10px 12px;font-weight:800;font-size:16px}
+.house svg{flex:none;width:42px;height:42px}
+.house span{flex:1;line-height:1.25}
+
+/* ---------- Здати роботу ---------- */
+.finish{margin-top:28px;border:2.5px dashed var(--lav-e);border-radius:22px;padding:20px 20px 18px;background:#FBFAFF;scroll-margin-top:64px}
+.finish h2{margin:0 0 4px;font-size:22px;font-weight:900}
+.finish .tip{margin-bottom:12px}
+.summary{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.summary li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;background:#fff;border-radius:12px;border:1.5px solid #E4E1F5}
+.summary a{color:inherit;text-decoration:none;font-weight:800;display:flex;gap:10px;align-items:center;min-width:0;flex:1 1 auto;line-height:1.25}
+@media (max-width:640px){.finish{padding:16px 12px}.summary li{padding:8px 10px}.summary a{font-size:15px}.st{font-size:13px}}
+.sn{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;font-size:13px;font-weight:900;flex:none;border:2px solid}
+.st{font-weight:900;font-size:14px;white-space:nowrap;text-align:right}
+.st.none{color:var(--muted)}.st.part{color:var(--warn)}.st.done{color:var(--ok)}
+.st small{display:block;font-weight:800;font-size:12px;color:var(--muted)}
+.finish-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:16px}
+.big{border:3px solid var(--yel-e);background:var(--yel);border-radius:16px;padding:12px 24px;font-weight:900;font-size:18px;cursor:pointer;box-shadow:0 5px 0 var(--yel-e);color:var(--ink)}
+.big:active{transform:translateY(2px);box-shadow:0 3px 0 var(--yel-e)}
+.finish-msg{margin:0;font-weight:800;font-size:15px;color:var(--warn);flex:1 1 240px}
+.result{margin-top:18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:18px;align-items:start}
+@media (max-width:760px){.result{grid-template-columns:1fr}}
+.rc{background:#fff;border:2.5px solid var(--lav-e);border-radius:20px;padding:18px}
+.rc-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rc-score{font-weight:900;line-height:1}
+.rc-score b{font-size:60px}
+.rc-score span{font-size:22px;color:var(--ink-2)}
+.rc-score .rc-cap{display:block;font-size:14px;color:var(--muted);font-weight:800;margin-top:6px}
+.rc-grade{display:grid;place-items:center;width:78px;height:78px;border-radius:50%;background:var(--yel);border:3px solid var(--yel-e);font-weight:900;font-size:30px;line-height:1;text-align:center}
+.rc-grade small{display:block;font-size:11px;font-weight:800;margin-top:2px}
+.rc dl{margin:14px 0 0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:15px}
+.rc dt{color:var(--muted);font-weight:800}
+.rc dd{margin:0;font-weight:800}
+.rc-png{width:100%;border-radius:16px;border:1.5px solid #E4E1F5;display:block;background:#fff}
+.rc-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.btn2{border:2.5px solid var(--ink);background:#fff;border-radius:14px;padding:9px 16px;font-weight:900;cursor:pointer;color:var(--ink)}
+.rc-note{margin:10px 0 0;color:var(--ink-2);font-size:14px;font-weight:700}
+.reset{margin-top:18px;border:0;background:none;color:var(--muted);font-weight:800;text-decoration:underline;cursor:pointer;padding:4px 0}
+.foot{margin:22px 0 0;text-align:center;color:var(--muted);font-size:13px;font-weight:700}
+
+/* ---------- Діалог з таблицею ---------- */
+dialog.ptd{border:0;padding:0;border-radius:22px;width:min(1180px,96vw);max-height:92vh;background:#fff;color:var(--ink);box-shadow:0 30px 80px -20px rgba(31,42,107,.55)}
+dialog.ptd::backdrop{background:rgba(31,42,107,.38)}
+.dlg-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px 0}
+.dlg-h b{font-size:18px;font-weight:900}
+.dlg-x{flex:none;border:2px solid var(--lav-e);background:var(--lav-t);border-radius:50%;width:38px;height:38px;font-size:22px;line-height:1;cursor:pointer;color:var(--ink)}
+dialog.ptd .pt-scroll{margin:0;padding:12px 16px 18px}
+
+/* конфеті */
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:14px;border-radius:3px;animation:fall linear forwards}
+@keyframes fall{to{transform:translate3d(var(--dx),110vh,0) rotate(var(--rot))}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="bar-title">Будова Періодичної системи</span>
+    <nav class="dots" id="dots" aria-label="Завдання">
+      <button type="button" class="dot" data-n="1">1</button>
+      <button type="button" class="dot" data-n="2">2</button>
+      <button type="button" class="dot" data-n="3">3</button>
+      <button type="button" class="dot" data-n="4">4</button>
+      <button type="button" class="dot" data-n="5">5</button>
+      <button type="button" class="dot" data-n="6">6</button>
+    </nav>
+    <button type="button" class="bar-btn" id="openTable"><svg viewBox="0 0 20 20" aria-hidden="true"><g fill="currentColor"><rect x="1" y="3" width="4" height="4" rx="1"/><rect x="15" y="3" width="4" height="4" rx="1"/><rect x="1" y="8" width="4" height="4" rx="1"/><rect x="11" y="8" width="4" height="4" rx="1"/><rect x="15" y="8" width="4" height="4" rx="1"/><rect x="1" y="13" width="4" height="4" rx="1"/><rect x="6" y="13" width="4" height="4" rx="1"/><rect x="11" y="13" width="4" height="4" rx="1"/><rect x="15" y="13" width="4" height="4" rx="1"/></g></svg>Таблиця</button>
+  </div>
+</div>
+
+<main class="sheet">
+  <header>
+    <h1 class="title">
+      <svg class="spark l" viewBox="0 0 40 44" aria-hidden="true"><g fill="none" stroke-linecap="round" stroke-width="5"><path d="M9 7l17 8" stroke="#FF6FA5"/><path d="M5 22h23" stroke="#FFC93C"/><path d="M9 37l17-8" stroke="#3CC6C0"/></g></svg>
+      <span class="pill">Періодична система хімічних елементів</span>
+      <svg class="spark r" viewBox="0 0 40 44" aria-hidden="true"><g fill="none" stroke-linecap="round" stroke-width="5"><path d="M9 7l17 8" stroke="#FF6FA5"/><path d="M5 22h23" stroke="#FFC93C"/><path d="M9 37l17-8" stroke="#3CC6C0"/></g></svg>
+    </h1>
+    <p class="sub">Інтерактивний робочий аркуш, 7 клас</p>
+    <div class="who">
+      <label class="who-f" id="nameF">Прізвище та ім'я <input id="name" class="line-in" maxlength="60" autocomplete="name" spellcheck="false"></label>
+      <label class="who-f small" id="clsF">Клас <input id="cls" class="line-in" maxlength="8" autocomplete="off" spellcheck="false"></label>
+    </div>
+    <p class="howto">Виконуй завдання в будь-якому порядку. Слова перетягуй мишкою або натисни на слово, а потім — на порожнє місце. Після кожного завдання натискай «Перевірити»: правильне стане зеленим, помилки — червоними, їх можна виправити. Бали зараховуються за першою перевіркою.</p>
+  </header>
+
+  <div class="boxes">
+    <!-- 1 -->
+    <section class="box y" id="task1" data-n="1">
+      <div class="stamp" aria-hidden="true"><span><small>★</small>Молодець!</span></div>
+      <h2 class="box-h"><span class="num">1</span>Періодична система впорядковує…</h2>
+      <p class="tip">Перенеси потрібні слова на лінії. Зайві слова залишаться.</p>
+      <div class="bank" data-task="1">
+        <button type="button" class="chip" data-task="1" data-v="mass" draggable="true">відносної атомної маси</button>
+        <button type="button" class="chip" data-task="1" data-v="118" draggable="true">118</button>
+        <button type="button" class="chip" data-task="1" data-v="el" draggable="true">хімічні елементи</button>
+        <button type="button" class="chip" data-task="1" data-v="110" draggable="true">110</button>
+        <button type="button" class="chip" data-task="1" data-v="num" draggable="true">порядкового номера</button>
+        <button type="button" class="chip" data-task="1" data-v="simple" draggable="true">прості речовини</button>
+        <span class="empty-msg">Усі слова на місцях</span>
+      </div>
+      <ul class="lines">
+        <li>Періодична система — це таблиця, у якій упорядковано всі відомі <button type="button" class="slot" data-f="t1a" data-task="1" aria-label="Пропуск 1"></button>.</li>
+        <li>У сучасній таблиці елементи розміщено за зростанням їхнього <button type="button" class="slot" data-f="t1b" data-task="1" aria-label="Пропуск 2"></button>.</li>
+        <li>Нині відомо <button type="button" class="slot s" data-f="t1c" data-task="1" aria-label="Пропуск 3"></button> хімічних елементів.</li>
+      </ul>
+      <div class="check-row"><button type="button" class="check" data-task="1">Перевірити</button><p class="verdict" aria-live="polite"></p></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="box p" id="task2" data-n="2">
+      <div class="stamp" aria-hidden="true"><span><small>★</small>Молодець!</span></div>
+      <h2 class="box-h"><span class="num">2</span>Клітинка елемента</h2>
+      <p class="tip">Що означає кожен запис у клітинці? Перенеси підписи до стрілок.</p>
+      <div class="bank" data-task="2">
+        <button type="button" class="chip" data-task="2" data-v="mass" draggable="true">Відносна атомна маса</button>
+        <button type="button" class="chip" data-task="2" data-v="val" draggable="true">Валентність</button>
+        <button type="button" class="chip" data-task="2" data-v="sym" draggable="true">Символ елемента</button>
+        <button type="button" class="chip" data-task="2" data-v="num" draggable="true">Порядковий номер</button>
+        <button type="button" class="chip" data-task="2" data-v="neut" draggable="true">Кількість нейтронів</button>
+        <button type="button" class="chip" data-task="2" data-v="name" draggable="true">Назва елемента</button>
+        <span class="empty-msg">Усі підписи на місцях</span>
+      </div>
+      <div class="cellwrap">
+        <div class="bc-bg" aria-hidden="true"></div>
+        <span class="bc bc-z" style="grid-row:1">11</span>
+        <span class="bc bc-s" style="grid-row:2">Na</span>
+        <span class="bc bc-n" style="grid-row:3">Натрій</span>
+        <span class="bc bc-m" style="grid-row:4">22,990</span>
+        <div class="bl" style="grid-row:1"><svg class="arr" viewBox="0 0 34 14" aria-hidden="true"><path d="M32 7H4M10 1.5 3.5 7 10 12.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><button type="button" class="slot" data-f="t2a" data-task="2" aria-label="Що означає число 11"></button></div>
+        <div class="bl" style="grid-row:2"><svg class="arr" viewBox="0 0 34 14" aria-hidden="true"><path d="M32 7H4M10 1.5 3.5 7 10 12.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><button type="button" class="slot" data-f="t2b" data-task="2" aria-label="Що означає запис Na"></button></div>
+        <div class="bl" style="grid-row:3"><svg class="arr" viewBox="0 0 34 14" aria-hidden="true"><path d="M32 7H4M10 1.5 3.5 7 10 12.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><button type="button" class="slot" data-f="t2c" data-task="2" aria-label="Що означає слово Натрій"></button></div>
+        <div class="bl" style="grid-row:4"><svg class="arr" viewBox="0 0 34 14" aria-hidden="true"><path d="M32 7H4M10 1.5 3.5 7 10 12.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><button type="button" class="slot" data-f="t2d" data-task="2" aria-label="Що означає число 22,990"></button></div>
+      </div>
+      <ul class="lines">
+        <li>Порядковий номер дорівнює заряду ядра атома. Отже, заряд ядра атома Натрію — <span class="fw"><select class="sel" data-f="t2e" aria-label="Заряд ядра атома Натрію"><option value="" selected disabled hidden>…</option><option value="p1">+1</option><option value="p11">+11</option><option value="p23">+23</option></select></span>.</li>
+      </ul>
+      <div class="check-row"><button type="button" class="check" data-task="2">Перевірити</button><p class="verdict" aria-live="polite"></p></div>
+    </section>
+
+    <!-- 3 -->
+    <section class="box b" id="task3" data-n="3">
+      <div class="stamp" aria-hidden="true"><span><small>★</small>Молодець!</span></div>
+      <h2 class="box-h"><span class="num">3</span>Як побудована таблиця</h2>
+      <p class="tip">Скористайся таблицею внизу й обери відповіді зі списків.</p>
+      <h3 class="sub-h">Скільки їх у цій таблиці?</h3>
+      <div class="counts">
+        <label>Періодів <span class="fw"><select class="sel" data-f="t3a" aria-label="Скільки періодів у таблиці"><option value="" selected disabled hidden>…</option><option value="7">7</option><option value="8">8</option><option value="10">10</option><option value="18">18</option></select></span></label>
+        <label>Груп <span class="fw"><select class="sel" data-f="t3b" aria-label="Скільки груп у таблиці"><option value="" selected disabled hidden>…</option><option value="7">7</option><option value="8">8</option><option value="16">16</option><option value="18">18</option></select></span></label>
+      </div>
+      <h3 class="sub-h">Малі чи великі періоди?</h3>
+      <div class="counts">
+        <label>Періоди 1, 2, 3 <span class="fw"><select class="sel" data-f="t3c" aria-label="Періоди 1, 2, 3 — малі чи великі"><option value="" selected disabled hidden>…</option><option value="small">малі</option><option value="large">великі</option></select></span></label>
+        <label>Періоди 4, 5, 6, 7 <span class="fw"><select class="sel" data-f="t3d" aria-label="Періоди 4, 5, 6, 7 — малі чи великі"><option value="" selected disabled hidden>…</option><option value="small">малі</option><option value="large">великі</option></select></span></label>
+      </div>
+      <h3 class="sub-h">Скільки елементів у періоді?</h3>
+      <div class="counts">
+        <label>1-й період <span class="fw"><select class="sel" data-f="t3e" aria-label="Елементів у 1 періоді"><option value="" selected disabled hidden>…</option><option value="2">2</option><option value="8">8</option><option value="18">18</option><option value="32">32</option></select></span></label>
+        <label>2-й і 3-й <span class="fw"><select class="sel" data-f="t3f" aria-label="Елементів у 2 і 3 періодах"><option value="" selected disabled hidden>…</option><option value="2">2</option><option value="8">8</option><option value="18">18</option><option value="32">32</option></select></span></label>
+        <label>4-й і 5-й <span class="fw"><select class="sel" data-f="t3g" aria-label="Елементів у 4 і 5 періодах"><option value="" selected disabled hidden>…</option><option value="2">2</option><option value="8">8</option><option value="18">18</option><option value="32">32</option></select></span></label>
+        <label>6-й і 7-й <span class="fw"><select class="sel" data-f="t3h" aria-label="Елементів у 6 і 7 періодах"><option value="" selected disabled hidden>…</option><option value="2">2</option><option value="8">8</option><option value="18">18</option><option value="32">32</option></select></span></label>
+      </div>
+      <p class="note">У 6 і 7 періодах рахуй і елементи, винесені вниз таблиці.</p>
+      <div class="check-row"><button type="button" class="check" data-task="3">Перевірити</button><p class="verdict" aria-live="polite"></p></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="box l" id="task4" data-n="4">
+      <div class="stamp" aria-hidden="true"><span><small>★</small>Молодець!</span></div>
+      <h2 class="box-h"><span class="num">4</span>Таблиця поділяється на…</h2>
+      <p class="tip">Що позначає кожен колір у таблиці?</p>
+      <ul class="legend">
+        <li><span class="sw m" role="img" aria-label="Рожевий колір"></span><span class="fw"><select class="sel" data-f="t4a" aria-label="Що позначає рожевий колір"><option value="" selected disabled hidden>…</option><option value="met">металічні елементи</option><option value="nonmet">неметалічні елементи</option><option value="inert">інертні елементи</option><option value="lanact">лантаноїди й актиноїди</option></select></span></li>
+        <li><span class="sw n" role="img" aria-label="Жовтий колір"></span><span class="fw"><select class="sel" data-f="t4b" aria-label="Що позначає жовтий колір"><option value="" selected disabled hidden>…</option><option value="met">металічні елементи</option><option value="nonmet">неметалічні елементи</option><option value="inert">інертні елементи</option><option value="lanact">лантаноїди й актиноїди</option></select></span></li>
+        <li><span class="sw i" role="img" aria-label="Блакитний колір"></span><span class="fw"><select class="sel" data-f="t4c" aria-label="Що позначає блакитний колір"><option value="" selected disabled hidden>…</option><option value="met">металічні елементи</option><option value="nonmet">неметалічні елементи</option><option value="inert">інертні елементи</option><option value="lanact">лантаноїди й актиноїди</option></select></span></li>
+        <li><span class="sw f" role="img" aria-label="Бузковий колір"></span><span class="fw"><select class="sel" data-f="t4d" aria-label="Що позначає бузковий колір"><option value="" selected disabled hidden>…</option><option value="met">металічні елементи</option><option value="nonmet">неметалічні елементи</option><option value="inert">інертні елементи</option><option value="lanact">лантаноїди й актиноїди</option></select></span></li>
+      </ul>
+      <ul class="lines">
+        <li>Яких елементів у таблиці більше? <span class="fw block"><select class="sel" data-f="t4e" aria-label="Яких елементів більше"><option value="" selected disabled hidden>…</option><option value="met">металічних</option><option value="nonmet">неметалічних</option><option value="eq">порівну</option></select></span></li>
+        <li>Де переважно розміщені неметалічні елементи? <span class="fw block"><select class="sel" data-f="t4f" aria-label="Де переважно розміщені неметалічні елементи"><option value="" selected disabled hidden>…</option><option value="left">у лівій частині таблиці</option><option value="tr">у правій верхній частині таблиці</option><option value="bottom">у нижній частині таблиці</option></select></span></li>
+      </ul>
+      <div class="check-row"><button type="button" class="check" data-task="4">Перевірити</button><p class="verdict" aria-live="polite"></p></div>
+    </section>
+  </div>
+
+  <!-- 5 -->
+  <section class="box t" id="task5" data-n="5">
+    <div class="stamp" aria-hidden="true"><span><small>★</small>Молодець!</span></div>
+    <h2 class="box-h"><span class="num">5</span>Підпиши частини таблиці</h2>
+    <p class="tip">Перенеси назви в порожні рамки на таблиці. Зайві назви залишаться.</p>
+    <div class="bank" data-task="5">
+      <button type="button" class="chip" data-task="5" data-v="grp" draggable="true">Групи</button>
+      <button type="button" class="chip" data-task="5" data-v="hal" draggable="true">Галогени</button>
+      <button type="button" class="chip" data-task="5" data-v="act" draggable="true">Актиноїди</button>
+      <button type="button" class="chip" data-task="5" data-v="per" draggable="true">Періоди</button>
+      <button type="button" class="chip" data-task="5" data-v="sub" draggable="true">Підгрупи</button>
+      <button type="button" class="chip" data-task="5" data-v="lan" draggable="true">Лантаноїди</button>
+      <span class="empty-msg">Усі назви на місцях</span>
+    </div>
+    <div class="pt-scroll"><div class="pt" id="pt"></div></div>
+    <p class="swipe">Таблицю можна гортати вбік</p>
+    <div class="check-row"><button type="button" class="check" data-task="5">Перевірити</button><p class="verdict" aria-live="polite"></p></div>
+  </section>
+
+  <!-- 6 -->
+  <section class="box m" id="task6" data-n="6">
+    <div class="stamp" aria-hidden="true"><span><small>★</small>Молодець!</span></div>
+    <h2 class="box-h"><span class="num">6</span>Адреса елемента</h2>
+    <p class="tip">Знайди елемент у таблиці та визнач, у якому він періоді та групі.</p>
+    <div class="addr-grid">
+      <div class="addr"><div class="el n mini"><i>8</i><b>O</b></div><div class="addr-body"><p class="addr-name">Оксиген</p><label>період <span class="fw"><select class="sel" data-f="t6a1" data-range="7" aria-label="Період Оксигену"></select></span></label><label>група <span class="fw"><select class="sel" data-f="t6a2" data-range="18" aria-label="Група Оксигену"></select></span></label></div></div>
+      <div class="addr"><div class="el m mini"><i>13</i><b>Al</b></div><div class="addr-body"><p class="addr-name">Алюміній</p><label>період <span class="fw"><select class="sel" data-f="t6b1" data-range="7" aria-label="Період Алюмінію"></select></span></label><label>група <span class="fw"><select class="sel" data-f="t6b2" data-range="18" aria-label="Група Алюмінію"></select></span></label></div></div>
+      <div class="addr"><div class="el n mini"><i>17</i><b>Cl</b></div><div class="addr-body"><p class="addr-name">Хлор</p><label>період <span class="fw"><select class="sel" data-f="t6c1" data-range="7" aria-label="Період Хлору"></select></span></label><label>група <span class="fw"><select class="sel" data-f="t6c2" data-range="18" aria-label="Група Хлору"></select></span></label></div></div>
+      <div class="addr"><div class="el m mini"><i>26</i><b>Fe</b></div><div class="addr-body"><p class="addr-name">Ферум</p><label>період <span class="fw"><select class="sel" data-f="t6d1" data-range="7" aria-label="Період Феруму"></select></span></label><label>група <span class="fw"><select class="sel" data-f="t6d2" data-range="18" aria-label="Група Феруму"></select></span></label></div></div>
+      <div class="addr"><div class="el m mini"><i>47</i><b>Ag</b></div><div class="addr-body"><p class="addr-name">Аргентум</p><label>період <span class="fw"><select class="sel" data-f="t6e1" data-range="7" aria-label="Період Аргентуму"></select></span></label><label>група <span class="fw"><select class="sel" data-f="t6e2" data-range="18" aria-label="Група Аргентуму"></select></span></label></div></div>
+    </div>
+    <h3 class="sub-h">Хто живе за адресою? Запиши символ елемента.</h3>
+    <div class="house-grid">
+      <label class="house"><svg viewBox="0 0 42 42" aria-hidden="true"><path d="M5 20 21 6l16 14" fill="none" stroke="#1F2A6B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 18v18h22V18" fill="#FFE17D" stroke="#1F2A6B" stroke-width="3" stroke-linejoin="round"/><rect x="17.5" y="25" width="7" height="11" rx="1.5" fill="#93D9F7" stroke="#1F2A6B" stroke-width="2.5"/></svg><span>2 період,<br>1 група</span><span class="fw"><input class="sym" data-f="t6f" maxlength="3" autocomplete="off" autocapitalize="sentences" autocorrect="off" spellcheck="false" placeholder="?" aria-label="Символ елемента: 2 період, 1 група"></span></label>
+      <label class="house"><svg viewBox="0 0 42 42" aria-hidden="true"><path d="M5 20 21 6l16 14" fill="none" stroke="#1F2A6B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 18v18h22V18" fill="#FFB6D2" stroke="#1F2A6B" stroke-width="3" stroke-linejoin="round"/><rect x="17.5" y="25" width="7" height="11" rx="1.5" fill="#93D9F7" stroke="#1F2A6B" stroke-width="2.5"/></svg><span>3 період,<br>16 група</span><span class="fw"><input class="sym" data-f="t6g" maxlength="3" autocomplete="off" autocapitalize="sentences" autocorrect="off" spellcheck="false" placeholder="?" aria-label="Символ елемента: 3 період, 16 група"></span></label>
+      <label class="house"><svg viewBox="0 0 42 42" aria-hidden="true"><path d="M5 20 21 6l16 14" fill="none" stroke="#1F2A6B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 18v18h22V18" fill="#D9CEFF" stroke="#1F2A6B" stroke-width="3" stroke-linejoin="round"/><rect x="17.5" y="25" width="7" height="11" rx="1.5" fill="#93D9F7" stroke="#1F2A6B" stroke-width="2.5"/></svg><span>4 період,<br>11 група</span><span class="fw"><input class="sym" data-f="t6h" maxlength="3" autocomplete="off" autocapitalize="sentences" autocorrect="off" spellcheck="false" placeholder="?" aria-label="Символ елемента: 4 період, 11 група"></span></label>
+    </div>
+    <div class="check-row"><button type="button" class="check" data-task="6">Перевірити</button><p class="verdict" aria-live="polite"></p></div>
+  </section>
+
+  <!-- Здати роботу -->
+  <section class="finish" id="finish">
+    <h2>Здати роботу</h2>
+    <p class="tip">Коли перевіриш усі шість завдань, отримай картку з результатом і надішли її вчителю.</p>
+    <ul class="summary" id="summary"></ul>
+    <div class="finish-row">
+      <button type="button" class="big" id="getResult">Отримати результат</button>
+      <p class="finish-msg" id="finishMsg" aria-live="polite"></p>
+    </div>
+    <div class="result" id="result" hidden>
+      <div class="rc">
+        <div class="rc-top">
+          <div class="rc-score"><b id="rFirst">0</b> <span id="rMax">з 34</span><span class="rc-cap">бали за першу перевірку</span></div>
+          <div class="rc-grade" id="rGradeBox"><div><span id="rGrade">1</span><small>з 12</small></div></div>
+        </div>
+        <dl>
+          <dt>Учень / учениця</dt><dd id="rName"></dd>
+          <dt>Клас</dt><dd id="rCls"></dd>
+          <dt>Після виправлень</dt><dd id="rNow"></dd>
+          <dt>Час роботи</dt><dd id="rTime"></dd>
+          <dt>Дата</dt><dd id="rDate"></dd>
+        </dl>
+        <div class="rc-actions">
+          <button type="button" class="btn2" id="dlPng">Завантажити картинку</button>
+          <button type="button" class="btn2" id="sharePng" hidden>Поділитися</button>
+        </div>
+        <p class="rc-note">Надішли картинку вчителю, наприклад у Google Класі. Якщо кнопка не спрацювала, натисни на картинку й утримуй, щоб зберегти її.</p>
+      </div>
+      <img class="rc-png" id="rPng" alt="Картка з результатом роботи">
+    </div>
+    <button type="button" class="reset" id="reset">Почати аркуш спочатку</button>
+  </section>
+  <p class="foot">Відповіді зберігаються лише на цьому пристрої, тож аркуш можна закрити й повернутися пізніше.</p>
+</main>
+
+<dialog class="ptd" id="ptDialog" aria-labelledby="ptdTitle">
+  <div class="dlg-h"><b id="ptdTitle">Періодична система хімічних елементів</b><button type="button" class="dlg-x" id="closeTable" aria-label="Закрити таблицю">×</button></div>
+  <div class="pt-scroll"><div class="pt" id="ptRead"></div></div>
+</dialog>
+
+<noscript><p style="text-align:center;font-weight:800;padding:20px">Щоб аркуш працював, увімкни JavaScript у браузері.</p></noscript>
+
+<script>
+(() => {
+'use strict';
+
+/* ---- ключ перевірки: лише хеші, без відкритих відповідей ---- */
+const SALT = 'ps7|budova|v1';
+const KEY = {"t1a":{"h":"190hkqb5wx7"},"t1b":{"h":"2bpquuoqd5v"},"t1c":{"h":"2d29bpujdv2"},"t2a":{"h":"yxyofn6my8"},"t2b":{"h":"rpaan313fb"},"t2c":{"h":"17e5uuv357q"},"t2d":{"h":"96clojb937"},"t2e":{"h":"chk4zzo54m"},"t3a":{"h":"20tdedsw7ho"},"t3b":{"h":"10y8ca01304"},"t3c":{"h":"1mibcadnkpa"},"t3d":{"h":"28m9ezkbym"},"t3e":{"h":"f7tu24l9v6"},"t3f":{"h":"28og3dahom3"},"t3g":{"h":"22oa4kbuv2b"},"t3h":{"h":"pcri5htffa"},"t4a":{"h":"10p1rk1mbcq"},"t4b":{"h":"4xtbwuyizf"},"t4c":{"h":"wm6ip05cmd"},"t4d":{"h":"145m3etercx"},"t4e":{"h":"zlv0akishf"},"t4f":{"h":"1pxeavj5muw"},"t5a":{"h":"2bbfk1gsu9y"},"t5b":{"h":"29qo2t2v9ug"},"t5c":{"h":"tijf9lsh3s"},"t5d":{"h":"1hd8sv4wug3"},"t6a1":{"h":"1ioggyohf7t"},"t6a2":{"h":"1b0ueig992n"},"t6b1":{"h":"1l3y521hlo5"},"t6b2":{"h":"l3eidbt95e"},"t6c1":{"h":"13wxik12ka4"},"t6c2":{"h":"1xoc78xf8ke"},"t6d1":{"h":"1x5eee4in6l"},"t6d2":{"h":"kdnochw6c4"},"t6e1":{"h":"knbk750dng"},"t6e2":{"h":"2gbxyhbepjc"},"t6f":{"h":"l8uzke4fth","c":"1xoluegkq7b"},"t6g":{"h":"1cu3kahz282","c":"ytjd39akc6"},"t6h":{"h":"9b64kbf21g","c":"d3nl8o1iml"}};
+const LS_KEY = 'chem7-budova-ps-v1';
+
+const TASKS = {
+  1: { title: 'Періодична система впорядковує…', color: ['#FFE17D', '#E9B52A'],
+       units: [['t1a'], ['t1b'], ['t1c']],
+       hint: 'Подивись на номери в клітинках таблиці: вони йдуть підряд. Номер останньої клітинки підкаже, скільки елементів відомо.' },
+  2: { title: 'Клітинка елемента', color: ['#FFB6D2', '#EE6C9C'],
+       units: [['t2a'], ['t2b'], ['t2c'], ['t2d'], ['t2e']],
+       hint: 'Найбільший напис у клітинці — символ. Ціле число вгорі — порядковий номер, дробове число — відносна атомна маса.' },
+  3: { title: 'Як побудована таблиця', color: ['#93D9F7', '#3AAEE2'],
+       units: [['t3a'], ['t3b'], ['t3c'], ['t3d'], ['t3e'], ['t3f'], ['t3g'], ['t3h']],
+       hint: 'Порахуй клітинки в кожному періоді. Лантаноїди й актиноїди теж рахуй: вони належать до 6 і 7 періодів.' },
+  4: { title: 'Таблиця поділяється на…', color: ['#D9CEFF', '#9E87F0'],
+       units: [['t4a'], ['t4b'], ['t4c'], ['t4d'], ['t4e'], ['t4f']],
+       hint: 'Подивись, якого кольору в таблиці найбільше і де зібрані жовті клітинки.' },
+  5: { title: 'Підпиши частини таблиці', color: ['#FFFFFF', '#9E87F0'],
+       units: [['t5a'], ['t5b'], ['t5c'], ['t5d']],
+       hint: 'Номери 1–7 стоять збоку, а 1–18 — угорі. Згадай, як називаються горизонтальні ряди й вертикальні стовпчики таблиці.' },
+  6: { title: 'Адреса елемента', color: ['#BFEBDD', '#3DBE98'],
+       units: [['t6a1', 't6a2'], ['t6b1', 't6b2'], ['t6c1', 't6c2'], ['t6d1', 't6d2'], ['t6e1', 't6e2'], ['t6f'], ['t6g'], ['t6h']],
+       hint: 'Знайди клітинку елемента й подивись на номери з краю таблиці — збоку та вгорі. Символ пиши так: перша літера велика, друга мала.' }
+};
+const NS = Object.keys(TASKS).map(Number);
+const MAX = NS.reduce((s, n) => s + TASKS[n].units.length, 0);
+
+/* ---- дані таблиці ---- */
+const SYM = ('H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr ' +
+  'Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu ' +
+  'Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr ' +
+  'Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og').split(' ');
+const NONMET = new Set(['H', 'B', 'C', 'N', 'O', 'F', 'Si', 'P', 'S', 'Cl', 'As', 'Se', 'Br', 'Te', 'I', 'At', 'Ts']);
+const INERT = new Set(['He', 'Ne', 'Ar', 'Kr', 'Xe', 'Rn', 'Og']);
+const isF = z => (z >= 57 && z <= 71) || (z >= 89 && z <= 103);
+const catOf = z => isF(z) ? 'f' : NONMET.has(SYM[z - 1]) ? 'n' : INERT.has(SYM[z - 1]) ? 'i' : 'm';
+/* рядок і стовпчик сітки: 1-й стовпчик — підписи, рядки 1–2 — шапка, 3–9 — періоди, 10 — проміжок, 11–12 — лантаноїди/актиноїди */
+function cellPos(z) {
+  if (z === 1) return [3, 2];
+  if (z === 2) return [3, 19];
+  if (z <= 10) return [4, (z <= 4 ? z - 2 : z + 8) + 1];
+  if (z <= 18) return [5, (z <= 12 ? z - 10 : z) + 1];
+  if (z <= 36) return [6, z - 18 + 1];
+  if (z <= 54) return [7, z - 36 + 1];
+  if (z <= 56) return [8, z - 54 + 1];
+  if (z <= 71) return [11, 5 + (z - 57)];
+  if (z <= 86) return [8, z - 68 + 1];
+  if (z <= 88) return [9, z - 86 + 1];
+  if (z <= 103) return [12, 5 + (z - 89)];
+  return [9, z - 100 + 1];
+}
+
+/* ---- допоміжне ---- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const F = id => document.querySelector('[data-f="' + id + '"]');
+const reduceMotion = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function cyrb53(str, seed = 0) {
+  let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+  for (let i = 0, ch; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
+  h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
+  h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+}
+const H = (id, v) => cyrb53(SALT + '|' + id + '|' + v).toString(36);
+const CYR = { 'А': 'A', 'В': 'B', 'С': 'C', 'Е': 'E', 'Н': 'H', 'І': 'I', 'К': 'K', 'М': 'M', 'О': 'O', 'Р': 'P', 'Т': 'T', 'Х': 'X', 'У': 'Y',
+  'а': 'a', 'с': 'c', 'е': 'e', 'і': 'i', 'о': 'o', 'р': 'p', 'х': 'x', 'у': 'y', 'к': 'k', 'м': 'm', 'т': 't', 'н': 'h', 'в': 'b' };
+const normSym = s => String(s || '').replace(/\s+/g, '').replace(/[Ѐ-ӿ]/g, ch => CYR[ch] || ch);
+function plural(n, one, few, many) {
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return one;
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+  return many;
+}
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* ---- стан ---- */
+function freshState() {
+  const tasks = {};
+  NS.forEach(n => { tasks[n] = { a: 0, f: null, s: null }; });
+  return { v: 1, name: '', cls: '', startedAt: null, finishedAt: null, fields: {}, tasks, shown: false };
+}
+let state = freshState();
+let restoring = false;
+function save() {
+  if (restoring) return;
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) { /* сховище недоступне — працюємо без нього */ }
+}
+function touch() { if (!state.startedAt) state.startedAt = Date.now(); }
+
+/* ---- побудова таблиці ---- */
+function makeSlot(id, label) {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'slot'; b.dataset.f = id; b.dataset.task = '5';
+  b.setAttribute('aria-label', label);
+  return b;
+}
+/* доступна назва поля: «Пропуск 1: хімічні елементи» */
+function labelSlot(slot) {
+  if (!slot.dataset.label) slot.dataset.label = slot.getAttribute('aria-label') || 'Пропуск';
+  slot.setAttribute('aria-label', slot.dataset.label + (slot.dataset.v ? ': ' + slot.textContent : ''));
+}
+function buildTable(root, withSlots) {
+  const frag = document.createDocumentFragment();
+  const add = (cls, r, c, html) => {
+    const d = document.createElement('div');
+    d.className = cls; d.style.gridRow = r; d.style.gridColumn = c;
+    if (html != null) d.innerHTML = html;
+    frag.appendChild(d); return d;
+  };
+  const gb = add('gbr', 1, '2 / 20');
+  if (withSlots) gb.appendChild(makeSlot('t5b', 'Підпис над номерами 1–18'));
+  for (let g = 1; g <= 18; g++) add('gnum', 2, g + 1, String(g));
+  const pl = add('plab', 2, 1);
+  if (withSlots) pl.appendChild(makeSlot('t5a', 'Підпис біля номерів 1–7'));
+  for (let p = 1; p <= 7; p++) add('pnum', p + 2, 1, String(p));
+  add('pbr', '3 / 10', 1);
+  for (let z = 1; z <= 118; z++) {
+    const [r, c] = cellPos(z);
+    add('el ' + catOf(z), r, c, '<i>' + z + '</i><b>' + SYM[z - 1] + '</b>');
+  }
+  add('el f ph', 8, 4, '<span>57–<br>71</span>');
+  add('el f ph', 9, 4, '<span>89–<br>103</span>');
+  add('fnote', 11, 1, '№ 57–71');
+  add('fnote', 12, 1, '№ 89–103');
+  const f1 = add('fslot', 11, '2 / 5'), f2 = add('fslot', 12, '2 / 5');
+  if (withSlots) {
+    f1.appendChild(makeSlot('t5c', 'Підпис ряду елементів № 57–71'));
+    f2.appendChild(makeSlot('t5d', 'Підпис ряду елементів № 89–103'));
+  }
+  root.textContent = '';
+  root.appendChild(frag);
+}
+
+/* ---- значення й перевірка полів ---- */
+const isSlot = el => el.classList.contains('slot');
+function rawValue(id) {
+  const el = F(id);
+  if (!el) return '';
+  if (isSlot(el)) return el.dataset.v || '';
+  return el.value || '';
+}
+function checkValue(id) {
+  const el = F(id);
+  return el.tagName === 'INPUT' ? normSym(el.value) : rawValue(id);
+}
+function isRight(id) {
+  const v = checkValue(id);
+  return !!v && !!KEY[id] && H(id, v) === KEY[id].h;
+}
+function isCaseSlip(id) {
+  const k = KEY[id]; const v = checkValue(id);
+  return !!(k && k.c && v) && H(id, v.toLowerCase()) === k.c;
+}
+const wrapOf = el => isSlot(el) ? el : (el.closest('.fw') || el);
+function statusOf(id) {
+  const w = wrapOf(F(id));
+  return w.classList.contains('ok') ? 'ok' : w.classList.contains('bad') ? 'bad' : '';
+}
+function setStatus(id, s) {
+  const el = F(id), w = wrapOf(el);
+  w.classList.remove('ok', 'bad');
+  if (s) w.classList.add(s);
+  if (s === 'ok') {
+    if (el.tagName === 'INPUT') el.readOnly = true; else el.disabled = true;
+  }
+  remember(id);
+}
+function remember(id) {
+  state.fields[id] = { v: rawValue(id), s: statusOf(id) };
+}
+function syncEmpty(sel) { sel.classList.toggle('empty', !sel.value); }
+
+/* ---- банк слів ---- */
+let picked = null;
+function chipFor(task, v) { return $('.bank[data-task="' + task + '"] .chip[data-v="' + v + '"]'); }
+function refreshBank(task) {
+  const bank = $('.bank[data-task="' + task + '"]');
+  if (!bank) return;
+  bank.classList.toggle('all-used', $$('.chip:not(.used)', bank).length === 0);
+}
+function pick(chip) {
+  unpick();
+  picked = chip;
+  chip.classList.add('picked');
+  chip.setAttribute('aria-pressed', 'true');
+  const box = document.getElementById('task' + chip.dataset.task);
+  if (box) box.classList.add('armed');
+}
+function unpick() {
+  if (picked) { picked.classList.remove('picked'); picked.removeAttribute('aria-pressed'); }
+  picked = null;
+  $$('.box.armed').forEach(b => b.classList.remove('armed'));
+}
+function putChip(slot, chip) {
+  if (slot.dataset.v) takeBack(slot, true);
+  slot.dataset.v = chip.dataset.v;
+  slot.textContent = chip.textContent;
+  slot.classList.remove('bad');
+  chip.classList.add('used');
+  labelSlot(slot);
+  refreshBank(slot.dataset.task);
+  touch(); remember(slot.dataset.f); save();
+}
+function takeBack(slot, quiet) {
+  const chip = chipFor(slot.dataset.task, slot.dataset.v);
+  if (chip) chip.classList.remove('used');
+  slot.dataset.v = '';
+  slot.textContent = '';
+  slot.classList.remove('bad');
+  labelSlot(slot);
+  refreshBank(slot.dataset.task);
+  if (!quiet) { remember(slot.dataset.f); save(); }
+}
+function onSlot(slot) {
+  if (slot.classList.contains('ok')) return;
+  if (picked && picked.dataset.task === slot.dataset.task) {
+    putChip(slot, picked); unpick(); return;
+  }
+  if (picked) unpick();
+  if (slot.dataset.v) { takeBack(slot); return; }
+  const bank = $('.bank[data-task="' + slot.dataset.task + '"]');
+  if (bank) { bank.classList.remove('nudge'); void bank.offsetWidth; bank.classList.add('nudge'); }
+  const box = document.getElementById('task' + slot.dataset.task);
+  if (box) verdict(+slot.dataset.task, 'warn', 'Спершу натисни на слово з рамки вгорі, а потім — на це місце.');
+}
+
+/* ---- повідомлення ---- */
+function verdict(n, kind, html) {
+  const v = $('#task' + n + ' .verdict');
+  v.className = 'verdict' + (kind ? ' ' + kind : '');
+  v.innerHTML = html || '';
+}
+
+/* ---- перевірка завдання ---- */
+function check(n) {
+  unpick();
+  const t = TASKS[n], st = state.tasks[n];
+  if (st.s === t.units.length) return;
+  const fields = t.units.flat();
+  const empty = fields.filter(id => statusOf(id) !== 'ok' && !checkValue(id));
+  if (empty.length) {
+    verdict(n, 'warn', 'Заповни ще ' + empty.length + ' ' + plural(empty.length, 'поле', 'поля', 'полів') + ', а потім перевір.');
+    empty.forEach(id => { const w = wrapOf(F(id)); w.classList.remove('flash'); void w.offsetWidth; w.classList.add('flash'); });
+    return;
+  }
+  let right = 0, slip = false;
+  t.units.forEach(u => {
+    let all = true;
+    u.forEach(id => {
+      if (statusOf(id) === 'ok') return;
+      const ok = isRight(id);
+      setStatus(id, ok ? 'ok' : 'bad');
+      if (!ok) { all = false; if (isCaseSlip(id)) slip = true; }
+    });
+    if (all) right++;
+  });
+  touch();
+  st.a += 1;
+  if (st.f === null) st.f = right;
+  st.s = right;
+  save();
+  paintTask(n, true);
+  const total = t.units.length;
+  if (right === total) {
+    verdict(n, 'ok', st.a === 1 ? 'Усе правильно! ' + right + ' з ' + total + '.' :
+      'Тепер усе правильно! За першу перевірку: ' + st.f + ' з ' + total + '.');
+    if (NS.every(k => state.tasks[k].s === TASKS[k].units.length)) celebrate();
+  } else {
+    let html = 'Правильно ' + right + ' з ' + total + '. Виправ червоні відповіді й перевір ще раз.';
+    if (slip) html += '<span class="hint">Майже! Перевір великі й малі літери в символі: перша — велика, друга — мала.</span>';
+    else html += '<span class="hint">Підказка: ' + esc(t.hint) + '</span>';
+    verdict(n, 'bad', html);
+  }
+  renderSummary();
+}
+
+/* ---- вигляд завдань і прогрес ---- */
+function paintTask(n, animate) {
+  const box = document.getElementById('task' + n), st = state.tasks[n], total = TASKS[n].units.length;
+  const done = st.s === total;
+  box.classList.toggle('still', !animate);
+  box.classList.toggle('done', done);
+  const btn = $('.check', box);
+  btn.disabled = done;
+  btn.textContent = done ? 'Виконано' : 'Перевірити';
+  const dot = $('.dot[data-n="' + n + '"]');
+  dot.classList.toggle('done', done);
+  dot.classList.toggle('part', st.a > 0 && !done);
+  dot.setAttribute('aria-label', 'Завдання ' + n + ': ' + (st.a === 0 ? 'ще не перевірено' : done ? 'виконано' : 'є помилки'));
+}
+function scoreFirst() { return NS.reduce((s, n) => s + (state.tasks[n].f || 0), 0); }
+function scoreNow() { return NS.reduce((s, n) => s + (state.tasks[n].s || 0), 0); }
+const grade12 = pts => Math.max(1, Math.round(pts / MAX * 12));
+function renderSummary() {
+  const ul = $('#summary');
+  ul.textContent = '';
+  NS.forEach(n => {
+    const t = TASKS[n], st = state.tasks[n], total = t.units.length;
+    const li = document.createElement('li');
+    let stat;
+    if (!st.a) stat = '<span class="st none">не перевірено</span>';
+    else {
+      stat = '<span class="st ' + (st.f === total ? 'done' : 'part') + '">' + st.f + ' з ' + total +
+        (st.s !== st.f ? '<small>після виправлень ' + st.s + ' з ' + total + '</small>' : '') + '</span>';
+    }
+    li.innerHTML = '<a href="#task' + n + '"><span class="sn" style="background:' + t.color[0] + ';border-color:' + t.color[1] + '">' + n + '</span>' + esc(t.title) + '</a>' + stat;
+    ul.appendChild(li);
+  });
+}
+
+/* ---- конфеті ---- */
+let celebrated = false;
+function celebrate() {
+  if (celebrated || reduceMotion()) return;
+  celebrated = true;
+  const wrap = document.createElement('div');
+  wrap.className = 'confetti';
+  const cols = ['#FFB6D2', '#FFE17D', '#93D9F7', '#D9CEFF', '#BFEBDD', '#EE6C9C', '#3AAEE2'];
+  for (let i = 0; i < 70; i++) {
+    const p = document.createElement('i');
+    p.style.left = (Math.random() * 100) + 'vw';
+    p.style.background = cols[i % cols.length];
+    p.style.animationDuration = (1.8 + Math.random() * 1.6) + 's';
+    p.style.animationDelay = (Math.random() * .5) + 's';
+    p.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px');
+    p.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+    wrap.appendChild(p);
+  }
+  document.body.appendChild(wrap);
+  setTimeout(() => wrap.remove(), 4200);
+}
+
+/* ---- результат ---- */
+let pngBlob = null;
+function fmtDate(ts) {
+  try {
+    return new Date(ts).toLocaleString('uk-UA', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  } catch (e) { return new Date(ts).toLocaleString(); }
+}
+function minutesSpent() {
+  if (!state.startedAt) return 1;
+  const end = state.finishedAt || Date.now();
+  return Math.max(1, Math.round((end - state.startedAt) / 60000));
+}
+async function showResult(fromClick) {
+  const msg = $('#finishMsg');
+  const left = NS.filter(n => !state.tasks[n].a);
+  if (left.length) {
+    msg.textContent = 'Спершу перевір ' + (left.length === 1 ? 'завдання ' : 'завдання ') + left.join(', ') + '.';
+    if (fromClick) document.getElementById('task' + left[0]).scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+    return;
+  }
+  const nm = $('#name').value.trim(), cl = $('#cls').value.trim();
+  $('#nameF').classList.toggle('need', !nm);
+  $('#clsF').classList.toggle('need', !cl);
+  if (!nm || !cl) {
+    msg.textContent = 'Впиши прізвище, ім’я та клас угорі аркуша.';
+    if (fromClick) { window.scrollTo({ top: 0, behavior: reduceMotion() ? 'auto' : 'smooth' }); (!nm ? $('#name') : $('#cls')).focus({ preventScroll: true }); }
+    return;
+  }
+  msg.textContent = '';
+  if (fromClick) state.finishedAt = Date.now();
+  state.shown = true;
+  save();
+  const first = scoreFirst(), now = scoreNow();
+  $('#rFirst').textContent = first;
+  $('#rMax').textContent = 'з ' + MAX;
+  $('#rGrade').textContent = grade12(first);
+  $('#rName').textContent = nm;
+  $('#rCls').textContent = cl;
+  $('#rNow').textContent = now + ' з ' + MAX;
+  $('#rTime').textContent = minutesSpent() + ' хв';
+  $('#rDate').textContent = fmtDate(state.finishedAt || Date.now());
+  $('#result').hidden = false;
+  try {
+    const cv = await drawCard({ nm, cl, first, now });
+    $('#rPng').src = cv.toDataURL('image/png');
+    pngBlob = await new Promise(res => cv.toBlob(res, 'image/png'));
+    const file = pngBlob && new File([pngBlob], fileName(), { type: 'image/png' });
+    $('#sharePng').hidden = !(file && navigator.canShare && navigator.canShare({ files: [file] }));
+  } catch (e) { /* без картинки результат усе одно видно на сторінці */ }
+  if (fromClick) $('#result').scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'nearest' });
+}
+function fileName() {
+  const nm = ($('#name').value.trim() || 'учень').replace(/[^\p{L}\p{N}]+/gu, '_').slice(0, 40);
+  const cl = ($('#cls').value.trim() || '').replace(/[^\p{L}\p{N}]+/gu, '');
+  return 'Будова_ПС_' + nm + (cl ? '_' + cl : '') + '.png';
+}
+function rr(x, X, Y, W, Hh, R) {
+  x.beginPath();
+  x.moveTo(X + R, Y); x.arcTo(X + W, Y, X + W, Y + Hh, R); x.arcTo(X + W, Y + Hh, X, Y + Hh, R);
+  x.arcTo(X, Y + Hh, X, Y, R); x.arcTo(X, Y, X + W, Y, R); x.closePath();
+}
+function fitText(x, s, maxW) {
+  if (x.measureText(s).width <= maxW) return s;
+  while (s.length > 1 && x.measureText(s + '…').width > maxW) s = s.slice(0, -1);
+  return s + '…';
+}
+async function drawCard(d) {
+  try {
+    await Promise.all(['900 44px Nunito', '800 28px Nunito', '700 28px Nunito', '700 56px Caveat'].map(f => document.fonts.load(f)));
+  } catch (e) { /* шрифти не завантажились — малюємо системними */ }
+  const W = 1080, Hh = 1500;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = Hh;
+  const x = cv.getContext('2d');
+  const NF = (w, s) => w + ' ' + s + 'px Nunito, "Segoe UI", Arial, sans-serif';
+  const CF = s => '700 ' + s + 'px Caveat, "Segoe Print", "Comic Sans MS", cursive';
+  const INK = '#1F2A6B', MUT = '#6E7499';
+  x.fillStyle = '#ECEAF8'; x.fillRect(0, 0, W, Hh);
+  rr(x, 30, 30, W - 60, Hh - 60, 44); x.fillStyle = '#fff'; x.fill();
+  /* заголовок */
+  const title = 'Будова Періодичної системи';
+  x.font = NF(900, 46);
+  const tw = x.measureText(title).width, pw = tw + 96, ph = 90, px = (W - pw) / 2, py = 76;
+  x.fillStyle = '#9E87F0'; rr(x, px, py + 8, pw, ph, 45); x.fill();
+  x.fillStyle = '#D9CEFF'; rr(x, px, py, pw, ph, 45); x.fill();
+  x.lineWidth = 5; x.strokeStyle = '#9E87F0'; x.stroke();
+  x.fillStyle = INK; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillText(title, W / 2, py + ph / 2 + 2);
+  const spark = (cx, cy, dir) => {
+    x.lineCap = 'round'; x.lineWidth = 7;
+    [['#FF6FA5', -22, -12], ['#FFC93C', 0, 0], ['#3CC6C0', 22, 12]].forEach(([c, dy, slope]) => {
+      x.strokeStyle = c; x.beginPath();
+      x.moveTo(cx - 16 * dir, cy + dy - slope * .5); x.lineTo(cx + 14 * dir, cy + dy + slope * .5); x.stroke();
+    });
+  };
+  spark(px - 40, py + ph / 2, 1); spark(px + pw + 40, py + ph / 2, -1);
+  x.font = NF(800, 28); x.fillStyle = MUT;
+  x.fillText('Робочий аркуш з хімії, 7 клас', W / 2, 214);
+  /* міні-таблиця */
+  const cs = 30, gp = 4, tx = (W - (18 * cs + 17 * gp)) / 2, ty = 254;
+  const fills = { m: ['#FFB6D2', '#EE6C9C'], n: ['#FFE17D', '#E9B52A'], i: ['#93D9F7', '#3AAEE2'], f: ['#D9CEFF', '#9E87F0'] };
+  const box = (r, c, cat) => {
+    const X = tx + (c - 2) * (cs + gp);
+    const Y = r <= 9 ? ty + (r - 3) * (cs + gp) : ty + 7 * (cs + gp) + 12 + (r - 11) * (cs + gp);
+    rr(x, X, Y, cs, cs, 6); x.fillStyle = fills[cat][0]; x.fill(); x.lineWidth = 2; x.strokeStyle = fills[cat][1]; x.stroke();
+  };
+  for (let z = 1; z <= 118; z++) { const [r, c] = cellPos(z); box(r, c, catOf(z)); }
+  box(8, 4, 'f'); box(9, 4, 'f');
+  /* учень */
+  let y = 632;
+  x.textAlign = 'left'; x.textBaseline = 'alphabetic';
+  x.font = NF(800, 26); x.fillStyle = MUT; x.fillText('Учень / учениця', 90, y);
+  x.fillText('Клас', 820, y);
+  x.font = CF(60); x.fillStyle = INK;
+  x.fillText(fitText(x, d.nm, 700), 90, y + 62);
+  x.fillText(fitText(x, d.cl, 180), 820, y + 62);
+  x.strokeStyle = '#D6D2EE'; x.lineWidth = 3; x.setLineDash([10, 8]);
+  x.beginPath(); x.moveTo(90, y + 80); x.lineTo(790, y + 80); x.moveTo(820, y + 80); x.lineTo(990, y + 80); x.stroke();
+  x.setLineDash([]);
+  x.font = NF(700, 26); x.fillStyle = MUT;
+  x.fillText(fmtDate(state.finishedAt || Date.now()) + '      Час роботи: ' + minutesSpent() + ' хв', 90, y + 130);
+  /* бали */
+  y = 812;
+  rr(x, 90, y, 900, 220, 32); x.fillStyle = '#FFF8DE'; x.fill(); x.lineWidth = 4; x.strokeStyle = '#E9B52A'; x.stroke();
+  x.font = NF(800, 26); x.fillStyle = MUT; x.fillText('Бали за першу перевірку', 130, y + 54);
+  x.font = NF(900, 104); x.fillStyle = INK; x.fillText(String(d.first), 126, y + 158);
+  const fw = x.measureText(String(d.first)).width;
+  x.font = NF(800, 40); x.fillStyle = '#4A5591'; x.fillText('з ' + MAX, 140 + fw, y + 158);
+  x.font = NF(700, 26); x.fillStyle = MUT; x.fillText('Після виправлень: ' + d.now + ' з ' + MAX, 130, y + 198);
+  const gx = 880, gy = y + 110;
+  x.beginPath(); x.arc(gx, gy, 78, 0, Math.PI * 2); x.fillStyle = '#FFE17D'; x.fill(); x.lineWidth = 5; x.strokeStyle = '#E9B52A'; x.stroke();
+  x.textAlign = 'center'; x.fillStyle = INK; x.font = NF(900, 64); x.fillText(String(grade12(d.first)), gx, gy + 18);
+  x.font = NF(800, 20); x.fillText('з 12 балів', gx, gy + 48);
+  /* завдання */
+  y = 1086; x.textAlign = 'left';
+  NS.forEach((n, i) => {
+    const t = TASKS[n], st = state.tasks[n], total = t.units.length, Y = y + i * 62;
+    x.beginPath(); x.arc(112, Y - 9, 19, 0, Math.PI * 2); x.fillStyle = t.color[0]; x.fill(); x.lineWidth = 3; x.strokeStyle = t.color[1]; x.stroke();
+    x.textAlign = 'center'; x.font = NF(900, 20); x.fillStyle = INK; x.fillText(String(n), 112, Y - 2);
+    x.textAlign = 'left'; x.font = NF(800, 27); x.fillText(fitText(x, t.title, 560), 146, Y);
+    x.textAlign = 'right'; x.font = NF(900, 27);
+    x.fillStyle = st.f === total ? '#1E9C5A' : '#A86A12';
+    x.fillText(st.f + ' з ' + total, 850, Y);
+    x.font = NF(700, 21); x.fillStyle = MUT;
+    x.fillText(st.a + ' ' + plural(st.a, 'спроба', 'спроби', 'спроб'), 990, Y);
+    x.textAlign = 'left';
+    if (i < NS.length - 1) { x.strokeStyle = '#ECEAF8'; x.lineWidth = 2; x.beginPath(); x.moveTo(90, Y + 24); x.lineTo(990, Y + 24); x.stroke(); }
+  });
+  x.textAlign = 'center'; x.font = NF(700, 20); x.fillStyle = MUT;
+  x.fillText(fitText(x, location.href.split('#')[0].split('?')[0], 900), W / 2, Hh - 64);
+  return cv;
+}
+function download() {
+  if (!pngBlob) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(pngBlob);
+  a.download = fileName();
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+async function share() {
+  if (!pngBlob) return;
+  const file = new File([pngBlob], fileName(), { type: 'image/png' });
+  try { await navigator.share({ files: [file], title: 'Будова Періодичної системи — результат' }); } catch (e) { /* скасовано */ }
+}
+
+/* ---- відновлення ---- */
+function restore() {
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(LS_KEY) || 'null'); } catch (e) { s = null; }
+  if (!s || s.v !== 1) return;
+  restoring = true;
+  state = Object.assign(freshState(), s);
+  NS.forEach(n => { state.tasks[n] = Object.assign({ a: 0, f: null, s: null }, (s.tasks || {})[n]); });
+  $('#name').value = state.name || '';
+  $('#cls').value = state.cls || '';
+  Object.keys(state.fields || {}).forEach(id => {
+    const el = F(id), f = state.fields[id];
+    if (!el || !f) return;
+    if (isSlot(el)) {
+      if (f.v) {
+        const chip = chipFor(el.dataset.task, f.v);
+        if (chip) { el.dataset.v = f.v; el.textContent = chip.textContent; chip.classList.add('used'); labelSlot(el); }
+      }
+    } else {
+      el.value = f.v || '';
+      if (el.tagName === 'SELECT') syncEmpty(el);
+    }
+    if (f.s && rawValue(id)) setStatus(id, f.s);
+  });
+  restoring = false;
+  NS.forEach(n => { refreshBank(n); paintTask(n, false); });
+  renderSummary();
+  if (state.shown) showResult(false);
+}
+
+/* ---- події ---- */
+function init() {
+  buildTable($('#pt'), true);
+  buildTable($('#ptRead'), false);
+  $$('select[data-range]').forEach(sel => {
+    const n = +sel.dataset.range;
+    sel.innerHTML = '<option value="" selected disabled hidden>…</option>' +
+      Array.from({ length: n }, (_, i) => '<option value="' + (i + 1) + '">' + (i + 1) + '</option>').join('');
+  });
+  $$('select.sel').forEach(syncEmpty);
+
+  document.addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (chip) { if (picked === chip) unpick(); else pick(chip); return; }
+    const slot = e.target.closest('.slot');
+    if (slot) { onSlot(slot); return; }
+    const chk = e.target.closest('.check');
+    if (chk) { check(+chk.dataset.task); return; }
+    const dot = e.target.closest('.dot');
+    if (dot) { document.getElementById('task' + dot.dataset.n).scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' }); return; }
+    if (picked && !e.target.closest('.bank')) unpick();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && picked) unpick(); });
+
+  /* перетягування мишкою */
+  let dragChip = null;
+  document.addEventListener('dragstart', e => {
+    const chip = e.target.closest && e.target.closest('.chip');
+    if (!chip) return;
+    dragChip = chip; pick(chip); chip.classList.add('dragging');
+    try { e.dataTransfer.setData('text/plain', chip.textContent); e.dataTransfer.effectAllowed = 'move'; } catch (err) { /* старі браузери */ }
+  });
+  document.addEventListener('dragend', () => { if (dragChip) dragChip.classList.remove('dragging'); dragChip = null; unpick(); $$('.slot.over').forEach(s => s.classList.remove('over')); });
+  document.addEventListener('dragover', e => {
+    const slot = e.target.closest && e.target.closest('.slot');
+    if (slot && dragChip && slot.dataset.task === dragChip.dataset.task && !slot.classList.contains('ok')) { e.preventDefault(); slot.classList.add('over'); }
+  });
+  document.addEventListener('dragleave', e => { const slot = e.target.closest && e.target.closest('.slot'); if (slot) slot.classList.remove('over'); });
+  document.addEventListener('drop', e => {
+    const slot = e.target.closest && e.target.closest('.slot');
+    if (!slot || !dragChip) return;
+    e.preventDefault(); slot.classList.remove('over');
+    if (slot.dataset.task === dragChip.dataset.task && !slot.classList.contains('ok')) putChip(slot, dragChip);
+  });
+
+  /* списки та поля */
+  document.addEventListener('change', e => {
+    const el = e.target;
+    if (el.matches && el.matches('select.sel[data-f]')) {
+      syncEmpty(el); wrapOf(el).classList.remove('bad');
+      touch(); remember(el.dataset.f); save();
+    }
+  });
+  document.addEventListener('input', e => {
+    const el = e.target;
+    if (el.matches && el.matches('input.sym[data-f]')) {
+      wrapOf(el).classList.remove('bad');
+      touch(); remember(el.dataset.f); save();
+    }
+    if (el.id === 'name' || el.id === 'cls') {
+      state[el.id === 'name' ? 'name' : 'cls'] = el.value;
+      el.closest('.who-f').classList.remove('need');
+      save();
+    }
+  });
+  $$('input.sym').forEach(inp => inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); check(6); }
+  }));
+
+  $('#getResult').addEventListener('click', () => showResult(true));
+  $('#dlPng').addEventListener('click', download);
+  $('#sharePng').addEventListener('click', share);
+  $('#reset').addEventListener('click', () => {
+    if (!confirm('Стерти всі відповіді й почати аркуш спочатку?')) return;
+    try { localStorage.removeItem(LS_KEY); } catch (e) { /* немає сховища */ }
+    location.reload();
+  });
+
+  const dlg = $('#ptDialog');
+  $('#openTable').addEventListener('click', () => {
+    if (typeof dlg.showModal === 'function') dlg.showModal();
+    else document.getElementById('task5').scrollIntoView({ block: 'start' });
+  });
+  $('#closeTable').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+
+  restore();
+  renderSummary();
+}
+init();
+})();
+</script>
+</body>
+</html>
