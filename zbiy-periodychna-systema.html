@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Збій у Періодичній системі — гра, 7 клас</title>
+<meta name="description" content="Гра-перевірка знань будови Періодичної системи для 7 класу: відповідай на 10 питань і відновлюй таблицю.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1b2541; --ink2:#3e4a6e; --muted:#6c7593; --bg:#f3f5fb; --paper:#fff; --line:#e1e6f2; --soft:#eef1f8;
+  --yel:#ffd84d;  --yel-e:#e3ae1c;
+  --pink:#ff9ec4; --pink-e:#e3689a;
+  --teal:#6ce0d0; --teal-e:#27b3a0;
+  --blue:#a6c8ff; --blue-e:#5f95ea;
+  --orng:#ffab6e; --orng-e:#e6823d;
+  --purp:#c7b4ff; --purp-e:#937ae9;
+  --grn:#bdee6b;  --grn-e:#89c238;
+  /* кольори відновленої таблиці — як в аркуші «Будова Періодичної системи» */
+  --cm:#FFB6D2; --cm-e:#EE6C9C;   /* металічні */
+  --cn:#FFE17D; --cn-e:#E9B52A;   /* неметалічні */
+  --ci:#93D9F7; --ci-e:#3AAEE2;   /* інертні */
+  --cf:#D9CEFF; --cf-e:#9E87F0;   /* лантаноїди й актиноїди */
+  --ok:#14864f; --ok-t:#e1f6ea; --bad:#d33a4a; --bad-t:#fde7e9; --focus:#4f5cf0;
+  --sh:0 10px 30px rgba(27,37,65,.08), 0 2px 6px rgba(27,37,65,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;line-height:1.45;min-height:100vh}
+button{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:18px clamp(10px,3vw,28px) 48px}
+[hidden]{display:none!important}
+
+/* ---------- верхня панель ---------- */
+.bar{position:sticky;top:0;z-index:20;background:rgba(243,245,251,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .in{max-width:1180px;margin:0 auto;padding:10px clamp(10px,3vw,28px);display:flex;align-items:center;gap:14px}
+.brand{font-weight:900;font-size:15px;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand .warn{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:var(--ink);color:#ffd84d;font-size:14px}
+.segs{display:flex;gap:4px;flex:1;min-width:0}
+.segs i{flex:1;height:10px;border-radius:5px;background:#dfe4f0;position:relative;transition:background .3s}
+.segs i.cur{background:#b9c3dc;box-shadow:0 0 0 2px var(--ink) inset}
+.segs i.ok{background:var(--ok)}
+.segs i.bad{background:var(--bad)}
+.pct{font-weight:800;white-space:nowrap;font-size:15px;min-width:118px;text-align:right}
+.pct b{font-size:18px}
+.icon-btn{border:0;background:var(--paper);border-radius:10px;width:36px;height:36px;box-shadow:0 1px 0 var(--line),0 0 0 1px var(--line) inset;cursor:pointer;font-size:16px;flex:none}
+@media (max-width:560px){.brand .t{display:none}.pct{min-width:0;font-size:13px}.pct span{display:none}}
+
+/* ---------- екрани ---------- */
+.scr{display:none}
+.scr.active{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.dots{display:flex;gap:7px;margin:4px 0 12px}
+.dots i{width:26px;height:7px;border-radius:4px;display:block}
+h1{font-size:clamp(30px,5.4vw,58px);line-height:1.04;margin:0 0 10px;font-weight:900;letter-spacing:-.02em}
+h1 .gl{position:relative;display:inline-block}
+h1 .gl::after{content:attr(data-t);position:absolute;left:0;top:0;color:#e3689a;mix-blend-mode:multiply;clip-path:inset(0 0 60% 0);transform:translate(3px,-1px);animation:hglitch 3.2s infinite steps(1)}
+@keyframes hglitch{0%,86%,100%{opacity:0}88%{opacity:.85;transform:translate(4px,-1px)}92%{opacity:.85;transform:translate(-3px,1px);clip-path:inset(55% 0 0 0)}96%{opacity:0}}
+.lead{font-size:clamp(16px,2vw,19px);color:var(--ink2);max-width:860px;margin:0 0 18px}
+.card{background:var(--paper);border-radius:22px;box-shadow:var(--sh);padding:clamp(16px,3vw,28px)}
+.start-grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:18px}
+@media (min-width:900px){.start-grid{grid-template-columns:1.25fr 1fr}.rules-card{order:-1}}
+.rules{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.rules li{display:flex;gap:10px;align-items:flex-start}
+.rules li b.n{flex:none;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;color:var(--ink);font-weight:900}
+label.f{display:block;font-weight:700;margin:0 0 6px;font-size:15px}
+.inp{width:100%;font:inherit;font-size:17px;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:#fff;color:var(--ink)}
+.inp:focus{border-color:var(--ink);outline:none}
+.row2{display:grid;grid-template-columns:1fr;gap:14px}
+.err{color:var(--bad);font-size:14px;font-weight:600;min-height:20px;margin-top:6px}
+.btn{border:0;border-radius:16px;padding:14px 22px;font-weight:800;font-size:17px;cursor:pointer;background:var(--ink);color:#fff;box-shadow:0 4px 0 #0c1328;transition:transform .08s, box-shadow .08s, opacity .2s;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0c1328}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:0 0 0 2px var(--ink) inset,0 4px 0 #c9d1e6}
+.btn.ok{background:var(--ok);box-shadow:0 4px 0 #0b5a33}
+.btn.wide{width:100%}
+.actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.note{font-size:14px;color:var(--muted);margin:10px 0 0}
+
+/* ---------- таблиця ---------- */
+.board-card{background:var(--paper);border-radius:22px;box-shadow:var(--sh);padding:clamp(8px,1.8vw,22px);position:relative}
+.board{position:relative;width:100%;user-select:none;-webkit-user-select:none}
+.tile{position:absolute;left:0;top:0;width:var(--tw);height:var(--th);border-radius:calc(var(--th)*.13);background:var(--tc,#e9edf6);
+  box-shadow:inset 0 calc(var(--th)*-.075) 0 var(--te,#cfd6e8);color:var(--ink);border:0;padding:0;margin:0;
+  transition:transform .9s cubic-bezier(.2,.85,.25,1),background-color .45s,box-shadow .45s;will-change:transform;overflow:hidden}
+.tile .z{position:absolute;left:9%;top:5%;font-size:var(--fz);font-weight:600;line-height:1;opacity:.9}
+.tile .s{position:absolute;left:0;right:0;bottom:0;top:0;display:flex;align-items:center;justify-content:center;padding-top:calc(var(--th)*.16);font-size:var(--fs);font-weight:800;letter-spacing:-.02em;line-height:1}
+.board.tiny .tile .z{display:none}
+.board.tiny .tile .s{padding-top:0}
+.p-yel{--tc:var(--yel);--te:var(--yel-e)} .p-pink{--tc:var(--pink);--te:var(--pink-e)} .p-teal{--tc:var(--teal);--te:var(--teal-e)}
+.p-blue{--tc:var(--blue);--te:var(--blue-e)} .p-orng{--tc:var(--orng);--te:var(--orng-e)} .p-purp{--tc:var(--purp);--te:var(--purp-e)} .p-grn{--tc:var(--grn);--te:var(--grn-e)}
+.tile.fx[data-cat="m"],.sw.m{--tc:var(--cm);--te:var(--cm-e)}
+.tile.fx[data-cat="n"],.sw.n{--tc:var(--cn);--te:var(--cn-e)}
+.tile.fx[data-cat="i"],.sw.i{--tc:var(--ci);--te:var(--ci-e)}
+.tile.fx[data-cat="f"],.sw.f{--tc:var(--cf);--te:var(--cf-e)}
+.tile.nt{--tc:#edf1f9;--te:#cdd5e8}
+.tile.fixing{animation:glow 1.6s ease}
+@keyframes glow{0%{filter:brightness(1.35) saturate(1.3)}40%{filter:brightness(1.15)}100%{filter:none}}
+.tile.flick .s{animation:flick .28s steps(2) 1}
+.tile.flick{filter:saturate(1.8) contrast(1.15)}
+@keyframes flick{0%{transform:translate(2px,-1px);text-shadow:-2px 0 #ff2d6f,2px 0 #19d3ff}50%{transform:translate(-3px,1px);text-shadow:2px 0 #ff2d6f,-2px 0 #19d3ff}100%{transform:none;text-shadow:none}}
+.tile.fail{animation:fail .5s ease 3}
+@keyframes fail{0%,100%{outline:0 solid rgba(211,58,74,0)}50%{outline:calc(var(--th)*.08) solid var(--bad);filter:grayscale(.5) brightness(.9)}}
+.board.glitch::after{content:"";position:absolute;inset:-6px;pointer-events:none;border-radius:10px;opacity:var(--gl,1);
+  background:repeating-linear-gradient(0deg,rgba(27,37,65,.06) 0 2px,transparent 2px 5px);animation:scan 7s linear infinite;transition:opacity .8s}
+@keyframes scan{from{background-position:0 0}to{background-position:0 200px}}
+.board.marked .tile:not(.fx)::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:repeating-linear-gradient(135deg,rgba(255,255,255,.55) 0 2px,transparent 2px 6px)}
+.board.shake{animation:bshake .45s ease}
+@keyframes bshake{0%,100%{transform:none}20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+
+.plab,.glab,.ph,.rname,.corner{position:absolute;left:0;top:0;transition:transform .9s cubic-bezier(.2,.85,.25,1),background-color .4s}
+.plab{width:var(--lw);height:var(--th);display:flex;align-items:center;justify-content:center;background:#e9edf6;border-radius:calc(var(--th)*.13);font-weight:800;font-size:var(--fl)}
+.glab{width:var(--tw);height:var(--hh);display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;border-radius:calc(var(--hh)*.28);font-weight:800;font-size:var(--fg)}
+.plab.fx{background:#dff3e8}
+.glab.fx{background:#1e4f8f}
+.plab.flick,.glab.flick{filter:hue-rotate(160deg) saturate(2)}
+.ph{width:var(--tw);height:var(--th);display:flex;align-items:center;justify-content:center;background:#e9edf6;color:var(--ink2);border-radius:calc(var(--th)*.13);font-weight:700;font-size:calc(var(--fs)*.8)}
+.rname{height:var(--th);display:flex;align-items:center;font-weight:600;color:var(--ink2);font-size:var(--fr);white-space:nowrap}
+.corner{height:var(--hh);display:flex;align-items:center;font-weight:700;color:var(--ink2);font-size:var(--fc)}
+button.tile{cursor:pointer}
+button.tile:hover{filter:brightness(.96)}
+.tile.pick{outline:calc(var(--th)*.08) solid var(--ink);outline-offset:1px;z-index:3;filter:none}
+.tile.hl{z-index:3;animation:hl 1.3s ease-in-out infinite;--tc:#ffd84d;--te:#e3ae1c}
+@keyframes hl{0%,100%{box-shadow:inset 0 calc(var(--th)*-.075) 0 var(--te),0 0 0 3px rgba(27,37,65,.9)}50%{box-shadow:inset 0 calc(var(--th)*-.075) 0 var(--te),0 0 0 6px rgba(27,37,65,.25)}}
+.tile.right{--tc:#9ee6b9;--te:#2f9d62;outline:calc(var(--th)*.08) solid var(--ok);outline-offset:1px;z-index:4}
+.tile.wrong{--tc:#ffc2c8;--te:#d33a4a;outline:calc(var(--th)*.08) solid var(--bad);outline-offset:1px;z-index:4}
+.qboard{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6px -4px 0;padding:6px 4px 10px}
+.qboard .board{min-width:640px}
+.qboard.fit .board{min-width:0}
+.scroll-hint{display:none;font-size:13px;color:var(--muted);margin:4px 0 0}
+@media (max-width:700px){.scroll-hint{display:block}}
+
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;margin-top:12px;font-size:14px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:18px;height:14px;border-radius:4px;background:var(--tc);box-shadow:inset 0 -3px 0 var(--te)}
+.sw.g{background:repeating-linear-gradient(135deg,rgba(255,255,255,.6) 0 2px,transparent 2px 5px),linear-gradient(90deg,var(--yel) 0 25%,var(--pink) 25% 50%,var(--teal) 50% 75%,var(--purp) 75%);box-shadow:none}
+
+/* ---------- питання ---------- */
+.qcard{max-width:980px;margin:16px auto 0}
+.qhead{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-bottom:10px}
+.badge{background:var(--ink);color:#fff;font-weight:800;font-size:13px;border-radius:999px;padding:5px 12px}
+.topic{font-weight:700;color:var(--ink2);font-size:15px}
+.qtext{font-size:clamp(20px,2.6vw,27px);line-height:1.25;margin:4px 0 6px;font-weight:800}
+.qhint{color:var(--muted);margin:0 0 14px;font-size:15px}
+.opts{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:640px){.opts{grid-template-columns:1fr 1fr}}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;border:2px solid var(--line);background:#fff;border-radius:16px;padding:13px 14px;cursor:pointer;font-size:17px;font-weight:600;transition:border-color .15s,background .15s,transform .08s}
+.opt:hover{border-color:#b6c0da}
+.opt:active{transform:scale(.99)}
+.opt .lt{flex:none;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--soft);font-weight:900}
+.opt.sel{border-color:var(--ink);background:#eef1ff}
+.opt.sel .lt{background:var(--ink);color:#fff}
+.opt.right{border-color:var(--ok);background:var(--ok-t)}
+.opt.right .lt{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-t)}
+.opt.wrong .lt{background:var(--bad);color:#fff}
+.opt[disabled]{cursor:default}
+
+.ptiles{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:6px 0 4px}
+.pt{position:relative;width:88px;height:78px;border-radius:12px;border:0;cursor:pointer;background:var(--tc);box-shadow:inset 0 -6px 0 var(--te);color:var(--ink);transition:transform .12s, outline-color .12s;outline:4px solid transparent;outline-offset:2px}
+.pt .z{position:absolute;left:9px;top:6px;font-size:14px;font-weight:600}
+.pt .s{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-top:12px;font-size:32px;font-weight:800}
+.pt:hover{transform:translateY(-2px)}
+.pt.sel{outline-color:var(--ink);transform:translateY(-3px)}
+.pt.right{outline-color:var(--ok)}
+.pt.wrong{outline-color:var(--bad);filter:grayscale(.3)}
+.pt[disabled]{cursor:default;transform:none}
+.pt.right::after,.pt.wrong::after{position:absolute;right:-8px;top:-10px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:15px}
+.pt.right::after{content:"✓";background:var(--ok)}
+.pt.wrong::after{content:"✗";background:var(--bad)}
+@media (max-width:420px){.pt{width:72px;height:66px}.pt .s{font-size:27px}}
+
+.strip{display:flex;gap:8px;justify-content:center;margin:4px 0 18px;flex-wrap:nowrap}
+.strip .pt{width:74px;height:68px;cursor:default}
+.strip .pt:hover{transform:none}
+.strip .pt.q{background:#fff;box-shadow:none;outline:3px dashed var(--ink);outline-offset:-3px}
+.strip .pt.q .s{color:var(--bad)}
+.strip-cap{text-align:center;color:var(--muted);font-size:14px;margin:0 0 6px}
+@media (max-width:420px){.strip{gap:5px}.strip .pt{width:58px;height:56px}.strip .pt .s{font-size:22px}.strip .pt .z{font-size:11px}}
+
+.chips-l{font-weight:800;margin:14px 0 8px;font-size:16px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{min-width:42px;height:42px;border-radius:12px;border:2px solid var(--line);background:#fff;font-weight:800;font-size:17px;cursor:pointer}
+.chip.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.right{background:var(--ok);border-color:var(--ok);color:#fff}
+.chip.wrong{background:var(--bad);border-color:var(--bad);color:#fff}
+.chip[disabled]{cursor:default}
+
+.feed{margin-top:16px;border-radius:16px;padding:14px 16px;border-left:6px solid;font-size:16px}
+.feed.ok{background:var(--ok-t);border-color:var(--ok)}
+.feed.bad{background:var(--bad-t);border-color:var(--bad)}
+.feed .h{font-weight:900;font-size:18px;margin-bottom:4px}
+.feed p{margin:4px 0 0}
+
+/* ---------- відновлення ---------- */
+.fixmsg{max-width:980px;margin:16px auto 14px;border-radius:18px;padding:14px 18px;display:flex;gap:14px;align-items:center;box-shadow:var(--sh);background:#fff}
+.fixmsg .ic{flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:24px;color:#fff;font-weight:900}
+.fixmsg.ok .ic{background:var(--ok)} .fixmsg.bad .ic{background:var(--bad)}
+.fixmsg .h{font-weight:900;font-size:19px}
+.fixmsg .sub{color:var(--ink2);font-size:15px}
+
+/* ---------- результат ---------- */
+.endhead{text-align:center;max-width:820px;margin:10px auto 18px}
+.bigpct{font-size:clamp(56px,11vw,104px);font-weight:900;line-height:1;letter-spacing:-.03em}
+.endhead h2{font-size:clamp(24px,3.6vw,36px);margin:8px 0 6px;font-weight:900}
+.endhead .sub{color:var(--ink2);font-size:17px;margin:0}
+.stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0 4px}
+.stat{background:#fff;border-radius:16px;box-shadow:var(--sh);padding:10px 18px;min-width:130px}
+.stat b{display:block;font-size:24px;font-weight:900}
+.stat span{font-size:13px;color:var(--muted);font-weight:600}
+.send{display:inline-flex;align-items:center;gap:8px;margin-top:14px;border-radius:999px;padding:8px 16px;font-weight:700;font-size:15px;background:#fff;box-shadow:var(--sh)}
+.send.ok{color:var(--ok)} .send.bad{color:var(--bad)} .send.wait{color:var(--ink2)}
+.send button{border:0;background:var(--ink);color:#fff;border-radius:999px;padding:5px 12px;font-weight:700;cursor:pointer;font-size:14px}
+.review{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.review li{background:#fff;border-radius:16px;box-shadow:var(--sh);padding:12px 14px 12px 56px;position:relative}
+.review li .mk{position:absolute;left:12px;top:12px;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:900}
+.review li.ok .mk{background:var(--ok)} .review li.bad .mk{background:var(--bad)}
+.review .tp{font-size:13px;color:var(--muted);font-weight:700}
+.review .qq{font-weight:700;margin:2px 0 4px}
+.review .an{font-size:15px;color:var(--ink2)}
+.review .an b{color:var(--ink)}
+h3.sec{font-size:22px;margin:30px 0 12px;font-weight:900}
+.footer{margin-top:28px;text-align:center;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<header class="bar" id="bar" hidden>
+  <div class="in">
+    <div class="brand"><span class="warn">⚠</span><span class="t">Збій у Періодичній системі</span></div>
+    <div class="segs" id="segs" aria-label="Прогрес"></div>
+    <div class="pct"><span>Відновлено </span><b id="pctNum">0 %</b></div>
+    <button class="icon-btn" id="sndBtn" type="button" aria-label="Звук">🔊</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- СТАРТ -->
+  <section class="scr active" id="scr-start">
+    <div class="dots" aria-hidden="true"><i style="background:var(--yel)"></i><i style="background:var(--pink)"></i><i style="background:var(--teal)"></i><i style="background:var(--blue)"></i><i style="background:var(--orng)"></i><i style="background:var(--purp)"></i><i style="background:var(--grn)"></i></div>
+    <h1>Збій у <span class="gl" data-t="Періодичній">Періодичній</span> системі</h1>
+    <p class="lead">Тривога! Стався збій: номери періодів і груп, а разом із ними всі 118 елементів переплуталися. Відповідай на 10 питань про будову Періодичної системи — кожна правильна відповідь повертає на місце частину таблиці.</p>
+
+    <div class="board-card"><div id="hostStart"></div></div>
+
+    <div class="start-grid">
+      <form class="card" id="startForm" autocomplete="on" novalidate>
+        <h2 style="margin:0 0 12px;font-size:22px;font-weight:900">Хто ремонтує систему?</h2>
+        <div class="row2">
+          <div>
+            <label class="f" for="inName">Прізвище та ім’я</label>
+            <input class="inp" id="inName" name="name" maxlength="60" placeholder="Наприклад: Коваленко Марія" autocomplete="name">
+          </div>
+          <div>
+            <label class="f" for="inCls">Клас</label>
+            <select class="inp" id="inCls" name="cls">
+              <option value="">Обери клас</option>
+              <option>7-А</option>
+              <option>7-Б</option>
+              <option value="other">Інший клас…</option>
+            </select>
+            <input class="inp" id="inClsOther" maxlength="8" placeholder="Напиши клас, наприклад 7-В" style="margin-top:8px" hidden>
+          </div>
+        </div>
+        <div class="err" id="startErr" role="alert"></div>
+        <button class="btn wide" id="btnStart" type="submit">Почати ремонт ▶</button>
+        <p class="note">Питання щоразу трохи інші, тому відповіді сусіда тобі не допоможуть 😉</p>
+      </form>
+      <div class="card rules-card">
+        <h2 style="margin:0 0 12px;font-size:22px;font-weight:900">Як грати</h2>
+        <ul class="rules">
+          <li><b class="n" style="background:var(--yel)">1</b><span>Таблиця поділена на 10 секторів. Кожне питання — це один сектор.</span></li>
+          <li><b class="n" style="background:var(--teal)">2</b><span>На кожне питання — <b>одна спроба</b>. Обери відповідь і натисни «Перевірити».</span></li>
+          <li><b class="n" style="background:var(--pink)">3</b><span>Правильна відповідь повертає елементи на місця, помилка залишає сектор у збої. Після кожної відповіді ти побачиш пояснення.</span></li>
+          <li><b class="n" style="background:var(--purp)">4</b><span>У кінці результат автоматично надійде вчителю.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ПИТАННЯ -->
+  <section class="scr" id="scr-q">
+    <div class="card qcard">
+      <div class="qhead"><span class="badge" id="qBadge">Сектор 1 з 10</span><span class="topic" id="qTopic"></span></div>
+      <h2 class="qtext" id="qText"></h2>
+      <p class="qhint" id="qHint"></p>
+      <div id="qBody"></div>
+      <div class="feed" id="qFeed" role="status" hidden></div>
+      <div class="actions"><button class="btn" id="qBtn" type="button" disabled>Перевірити</button></div>
+    </div>
+  </section>
+
+  <!-- ВІДНОВЛЕННЯ -->
+  <section class="scr" id="scr-fix">
+    <div class="fixmsg" id="fixMsg" role="status"><div class="ic">✓</div><div><div class="h"></div><div class="sub"></div></div></div>
+    <div class="board-card"><div id="hostFix"></div></div>
+    <div class="legend" aria-label="Кольори таблиці">
+      <span><i class="sw m"></i>металічні</span><span><i class="sw n"></i>неметалічні</span><span><i class="sw i"></i>інертні</span><span><i class="sw f"></i>лантаноїди й актиноїди</span><span><i class="sw g"></i>у збої</span>
+    </div>
+    <div class="actions"><button class="btn" id="fixBtn" type="button">Наступне питання ▶</button></div>
+  </section>
+
+  <!-- РЕЗУЛЬТАТ -->
+  <section class="scr" id="scr-end">
+    <div class="endhead">
+      <div class="bigpct" id="endPct">0 %</div>
+      <h2 id="endTitle"></h2>
+      <p class="sub" id="endSub"></p>
+      <div class="stats">
+        <div class="stat"><b id="stScore">0 з 10</b><span>правильних відповідей</span></div>
+        <div class="stat"><b id="stTime">0:00</b><span>час гри</span></div>
+        <div class="stat"><b id="stWho">—</b><span id="stCls">клас</span></div>
+      </div>
+      <div class="send wait" id="sendBox">⏳ Надсилаю результат учителю…</div>
+    </div>
+    <div class="board-card"><div id="hostEnd"></div></div>
+    <div class="legend">
+      <span><i class="sw m"></i>металічні</span><span><i class="sw n"></i>неметалічні</span><span><i class="sw i"></i>інертні</span><span><i class="sw f"></i>лантаноїди й актиноїди</span><span><i class="sw g"></i>у збої</span>
+    </div>
+    <div class="actions"><button class="btn ghost" id="btnFull" type="button">🛠 Показати правильну таблицю</button></div>
+    <h3 class="sec">Розбір відповідей</h3>
+    <ol class="review" id="review"></ol>
+    <div class="actions"><button class="btn" id="btnAgain" type="button">↻ Пройти ще раз (нові питання)</button></div>
+  </section>
+
+  <p class="footer">Хімія · 7 клас · Будова Періодичної системи хімічних елементів</p>
+</main>
+
+<noscript><p style="text-align:center;padding:20px">Щоб гра працювала, увімкни JavaScript у браузері.</p></noscript>
+
+<script>
+(() => {
+'use strict';
+
+/* ======================= НАЛАШТУВАННЯ ======================= */
+// URL вебзастосунку Google Apps Script (закінчується на /exec). Порожньо — результати не надсилаються.
+const API = '';
+const GAME = 'zbiy-ps-7';
+const STORE = 'zbiy-ps7-v1';
+
+/* ======================= ДАНІ ======================= */
+const SYM = ('H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr ' +
+  'Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu ' +
+  'Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr ' +
+  'Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og').split(' ');
+const ZOF = s => SYM.indexOf(s) + 1;
+const NAME = {H:'Гідроген',He:'Гелій',Li:'Літій',Be:'Берилій',B:'Бор',C:'Карбон',N:'Нітроген',O:'Оксиген',F:'Флуор',Ne:'Неон',
+  Na:'Натрій',Mg:'Магній',Al:'Алюміній',Si:'Силіцій',P:'Фосфор',S:'Сульфур',Cl:'Хлор',Ar:'Аргон',K:'Калій',Ca:'Кальцій',
+  Fe:'Ферум',Cu:'Купрум',Zn:'Цинк',Br:'Бром',Kr:'Криптон',Rb:'Рубідій',Sr:'Стронцій',Ag:'Аргентум',Sn:'Станум',I:'Йод',Xe:'Ксенон',
+  Ba:'Барій',Au:'Аурум',Hg:'Меркурій',Pb:'Плюмбум',Se:'Селен',Te:'Телур',Rn:'Радон',La:'Лантан',Lu:'Лютецій',Ac:'Актиній',Lr:'Лоуренсій',Og:'Оганесон'};
+const nm = s => NAME[s] ? `${NAME[s]} ${s}` : s;
+
+// розміщення елемента в правильній таблиці: [рядок, стовпець]; рядки 8 і 9 — винесені ряди А і Б
+function home(z){
+  if (z === 1) return [1, 1];
+  if (z === 2) return [1, 18];
+  if (z <= 10) return [2, z <= 4 ? z - 2 : z + 8];
+  if (z <= 18) return [3, z <= 12 ? z - 10 : z];
+  if (z <= 36) return [4, z - 18];
+  if (z <= 54) return [5, z - 36];
+  if (z <= 56) return [6, z - 54];
+  if (z <= 71) return [8, z - 53];
+  if (z <= 86) return [6, z - 68];
+  if (z <= 88) return [7, z - 86];
+  if (z <= 103) return [9, z - 85];
+  return [7, z - 100];
+}
+const periodOf = z => { const r = home(z)[0]; return r <= 7 ? r : (r === 8 ? 6 : 7); };
+const groupOf  = z => { const [r, c] = home(z); return r <= 7 ? c : 3; };
+
+const NONMET = new Set(['H','B','C','N','O','F','Si','P','S','Cl','As','Se','Br','Te','I','At','Ts']);
+const INERT  = new Set(['He','Ne','Ar','Kr','Xe','Rn','Og']);
+const catOf = z => ((z >= 57 && z <= 71) || (z >= 89 && z <= 103)) ? 'f' : NONMET.has(SYM[z-1]) ? 'n' : INERT.has(SYM[z-1]) ? 'i' : 'm';
+
+// «Збій» — розкладка з картинки (рядки зверху вниз; «.» — порожньо, «*» — клітинка-посилання А/Б)
+const GLITCH = [
+  'As . . . . . . . . . . . . . . . . Tl',
+  'V Co . . . . . . . . . . Pt Fl Al Nb Cs Ho',
+  'Sb Ga . . . . . . . . . . Si Dy Re Kr Lu W',
+  'He C Sr Zr Tm Cl Sc F Md Rb Hs Be Zn Ce U Cf Li P',
+  'Ta Au Na La Pu Lv Ra Hf Nd No Er Nh Tc Se Rn Pm K Br',
+  'Mt Lr * Fe Cm Cr Ru Sn S O Ag Ts Yb Cd Mo Ca Es Ir',
+  'B Os * Ge Ds Cu Db Ar Ni Ac Tb Eu Ne Ba Sm Fm Gd Mc',
+  '. . . Rh Sg Og Fr Mg Rf H Rg I Mn Np Am Pd In Pb',
+  '. . . Pa Bi Cn Y At Bh Hg Ti Xe Bk Te Pr N Po Th'
+];
+const GL_PER = [7, 1, 5, 2, 4, 3, 6];                                   // номери періодів зверху вниз
+const GL_GRP = [11, 16, 9, 5, 18, 10, 17, 14, 7, 4, 3, 8, 15, 1, 6, 13, 2, 12]; // номери груп зліва направо
+const PAL = ['teal', 'blue', 'orng', 'purp', 'grn', 'yel', 'pink'];
+
+// 10 секторів: які елементи повертає кожне правильне питання
+const RANGES = [[1,12],[13,24],[25,36],[37,48],[49,60],[61,72],[73,84],[85,96],[97,107],[108,118]];
+const rangeZ = i => { const [a, b] = RANGES[i]; const out = []; for (let z = a; z <= b; z++) out.push(z); return out; };
+
+/* ======================= ДОПОМІЖНЕ ======================= */
+const $ = id => document.getElementById(id);
+const rnd = n => Math.floor(Math.random() * n);
+const pick = a => a[rnd(a.length)];
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const sample = (a, n) => shuffle(a.slice()).slice(0, n);
+const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtTime = ms => { const s = Math.max(0, Math.round(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+const load = () => { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; } };
+const save = o => { try { localStorage.setItem(STORE, JSON.stringify(Object.assign(load(), o))); } catch (e) {} };
+
+/* ======================= ЗВУК ======================= */
+const SND = { on: load().snd !== 'off', ctx: null };
+function tones(seq){
+  if (!SND.on) return;
+  try {
+    SND.ctx = SND.ctx || new (window.AudioContext || window.webkitAudioContext)();
+    const c = SND.ctx; let t = c.currentTime + .01;
+    seq.forEach(([f, d, type = 'sine', v = .06]) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type; o.frequency.setValueAtTime(f, t);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .012); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+      o.connect(g).connect(c.destination); o.start(t); o.stop(t + d + .03); t += d * .78;
+    });
+  } catch (e) {}
+}
+const SFX = {
+  ok:   () => tones([[660,.12],[880,.12],[1320,.22]]),
+  bad:  () => tones([[230,.18,'sawtooth',.035],[150,.3,'sawtooth',.035]]),
+  fix:  () => tones([[520,.07,'triangle'],[700,.07,'triangle'],[930,.07,'triangle'],[1240,.16,'triangle']]),
+  tap:  () => tones([[880,.035,'square',.015]]),
+  end:  () => tones([[523,.14],[659,.14],[784,.14],[1046,.3]])
+};
+function paintSnd(){ $('sndBtn').textContent = SND.on ? '🔊' : '🔇'; $('sndBtn').setAttribute('aria-label', SND.on ? 'Вимкнути звук' : 'Увімкнути звук'); }
+$('sndBtn').addEventListener('click', () => { SND.on = !SND.on; save({ snd: SND.on ? 'on' : 'off' }); paintSnd(); SFX.tap(); });
+paintSnd();
+
+/* ======================= ТАБЛИЦЯ ======================= */
+class Board {
+  constructor({ glitch = false, labels = true, clickable = false, neutral = false } = {}){
+    this.glitch = glitch; this.labels = labels; this.clickable = clickable; this.neutral = neutral;
+    this.el = el('div', 'board' + (glitch ? ' glitch' : ''));
+    this.tiles = new Map(); this.slot = new Map(); this.fixed = new Set();
+    this.onPick = null; this.locked = false;
+    for (let z = 1; z <= 118; z++){
+      const s = SYM[z-1];
+      const t = el(clickable ? 'button' : 'div', 'tile', `<span class="z">${z}</span><span class="s">${s}</span>`);
+      t.dataset.z = z;
+      if (clickable){
+        t.type = 'button';
+        t.setAttribute('aria-label', `${NAME[s] || s}, ${s}, номер ${z}`);
+        t.addEventListener('click', () => { if (!this.locked && this.onPick) this.onPick(z, t); });
+      } else t.setAttribute('aria-hidden', 'true');
+      if (neutral) t.classList.add('nt');
+      this.el.appendChild(t); this.tiles.set(z, t);
+    }
+    this.ph = ['А', 'Б'].map(l => { const d = el('div', 'ph', l); d.setAttribute('aria-hidden', 'true'); this.el.appendChild(d); return d; });
+    this.rn = ['А', 'Б'].map(l => { const d = el('div', 'rname'); d.dataset.l = l; d.setAttribute('aria-hidden', 'true'); this.el.appendChild(d); return d; });
+    this.pl = new Map(); this.gl = new Map(); this.plPos = new Map(); this.glPos = new Map();
+    if (labels){
+      this.corner = el('div', 'corner', 'Групи'); this.el.appendChild(this.corner);
+      for (let v = 1; v <= 7; v++){ const d = el('div', 'plab', String(v)); d.title = `${v} період`; this.el.appendChild(d); this.pl.set(v, d); }
+      for (let v = 1; v <= 18; v++){ const d = el('div', 'glab', String(v)); d.title = `${v} група`; this.el.appendChild(d); this.gl.set(v, d); }
+    }
+    glitch ? this.scramble() : this.solve();
+    this.ro = new ResizeObserver(() => {
+      const w = this.el.clientWidth;
+      if (w && w !== this._w){ this._w = w; this.el.classList.add('noanim'); this.layout(); void this.el.offsetWidth; requestAnimationFrame(() => this.el.classList.remove('noanim')); }
+    });
+    this.ro.observe(this.el);
+    if (glitch) this.flickTimer = setInterval(() => this.flicker(), 620);
+  }
+  scramble(){
+    GLITCH.forEach((row, ri) => row.split(' ').forEach((s, ci) => {
+      if (s === '.' || s === '*') return;
+      const z = ZOF(s); this.slot.set(z, [ri + 1, ci + 1]);
+      const t = this.tiles.get(z); t.classList.remove('fx'); t.classList.add('p-' + PAL[(ci + 2 * ri + 1) % 7]);
+    }));
+    GL_PER.forEach((v, i) => this.plPos.set(v, i + 1));
+    GL_GRP.forEach((v, i) => this.glPos.set(v, i + 1));
+  }
+  solve(){
+    for (let z = 1; z <= 118; z++){ this.slot.set(z, home(z)); this.fixed.add(z); if (!this.neutral){ const t = this.tiles.get(z); t.classList.add('fx'); t.dataset.cat = catOf(z); } }
+    for (let v = 1; v <= 7; v++) this.plPos.set(v, v);
+    for (let v = 1; v <= 18; v++) this.glPos.set(v, v);
+  }
+  layout(){
+    const W = this.el.clientWidth; if (!W) return;
+    const L = this.labels ? Math.max(18, Math.min(48, W * .05)) : 0;
+    const gap = Math.max(2, Math.min(8, W * .0048));
+    const cw = (W - L) / 18, tw = cw - gap;
+    const tiny = tw < 34;
+    const th = tiny ? tw * 1.08 : tw * .8;
+    const hh = this.labels ? Math.max(15, th * .52) : 0;
+    const top0 = this.labels ? hh + gap * 1.6 : 0;
+    const Y = r => r <= 7 ? top0 + (r - 1) * (th + gap) : top0 + 7 * (th + gap) + th * .38 + (r - 8) * (th + gap);
+    const X = c => L + (c - 1) * cw;
+    const st = this.el.style;
+    st.setProperty('--tw', tw + 'px'); st.setProperty('--th', th + 'px'); st.setProperty('--hh', hh + 'px');
+    st.setProperty('--lw', Math.max(0, L - gap) + 'px');
+    st.setProperty('--fs', Math.min(th * .44, tw * .46) + 'px'); st.setProperty('--fz', (th * .2) + 'px');
+    st.setProperty('--fl', Math.min(th * .42, L * .5) + 'px'); st.setProperty('--fg', Math.min(hh * .6, tw * .42) + 'px');
+    st.setProperty('--fr', Math.max(9, Math.min(17, cw * .28)) + 'px'); st.setProperty('--fc', Math.max(8, Math.min(14, L * .27)) + 'px');
+    st.height = (Y(9) + th + 4) + 'px';
+    this.el.classList.toggle('tiny', tiny);
+    for (const [z, t] of this.tiles){ const [r, c] = this.slot.get(z); t.style.transform = `translate(${X(c)}px,${Y(r)}px)`; }
+    this.ph[0].style.transform = `translate(${X(3)}px,${Y(6)}px)`;
+    this.ph[1].style.transform = `translate(${X(3)}px,${Y(7)}px)`;
+    const full = (X(4) - X(1)) > 150;
+    this.rn.forEach((d, i) => { d.textContent = full ? `Винесений ряд ${d.dataset.l}` : `Ряд ${d.dataset.l}`; d.style.transform = `translate(${X(1)}px,${Y(8 + i)}px)`; });
+    if (this.labels){
+      for (const [v, d] of this.pl) d.style.transform = `translate(0px,${Y(this.plPos.get(v))}px)`;
+      for (const [v, d] of this.gl) d.style.transform = `translate(${X(this.glPos.get(v))}px,0px)`;
+      this.corner.style.transform = `translate(0px,0px)`;
+      this.corner.style.display = L > 34 ? '' : 'none';
+    }
+  }
+  flicker(){
+    if (!this.el.isConnected || document.hidden) return;
+    const pool = [];
+    for (const z of this.tiles.keys()) if (!this.fixed.has(z)) pool.push(this.tiles.get(z));
+    if (this.labels){
+      for (const [v, d] of this.pl) if (this.plPos.get(v) !== v) pool.push(d);
+      for (const [v, d] of this.gl) if (this.glPos.get(v) !== v) pool.push(d);
+    }
+    if (!pool.length){ clearInterval(this.flickTimer); return; }
+    sample(pool, Math.min(3, pool.length)).forEach(t => { t.classList.add('flick'); setTimeout(() => t.classList.remove('flick'), 300); });
+  }
+  repair(zs){
+    const occ = new Map(); for (const [z, s] of this.slot) occ.set(s.join(','), z);
+    zs.forEach(z => {
+      const h = home(z), hk = h.join(','), cur = this.slot.get(z), o = occ.get(hk);
+      if (o !== undefined && o !== z){ this.slot.set(o, cur); occ.set(cur.join(','), o); }
+      this.slot.set(z, h); occ.set(hk, z); this.fixed.add(z);
+    });
+    zs.forEach((z, i) => {
+      const t = this.tiles.get(z);
+      t.style.transitionDelay = (i * 45) + 'ms';
+      t.classList.add('fx', 'fixing'); t.dataset.cat = catOf(z);
+      setTimeout(() => { t.style.transitionDelay = ''; t.classList.remove('fixing'); }, 1800 + i * 45);
+    });
+    this.layout();
+  }
+  fixLabels(kind){
+    const map = kind === 'p' ? this.plPos : this.glPos, els = kind === 'p' ? this.pl : this.gl;
+    for (const v of map.keys()){ map.set(v, v); els.get(v).classList.add('fx'); }
+    this.layout();
+  }
+  fail(zs){
+    zs.forEach(z => { const t = this.tiles.get(z); t.classList.remove('fail'); void t.offsetWidth; t.classList.add('fail'); setTimeout(() => t.classList.remove('fail'), 1600); });
+    // ще трохи «збою»: кілька неполагоджених елементів міняються місцями
+    const free = [...this.tiles.keys()].filter(z => !this.fixed.has(z));
+    for (let k = 0; k < 5 && free.length > 1; k++){
+      const [a, b] = sample(free, 2); const sa = this.slot.get(a); this.slot.set(a, this.slot.get(b)); this.slot.set(b, sa);
+    }
+    this.el.classList.remove('shake'); void this.el.offsetWidth; this.el.classList.add('shake');
+    this.layout();
+  }
+  setGlitchLevel(v){ this.el.style.setProperty('--gl', v); }
+  destroy(){ clearInterval(this.flickTimer); this.ro.disconnect(); this.el.remove(); }
+}
+
+/* ======================= ПИТАННЯ ======================= */
+const mkChoice = (text, opts, correct, explain) => ({ type: 'choice', html: esc(text), short: text, options: shuffle(opts.slice()), correct, explain });
+
+const SLOTS = [
+  { topic: 'Періоди', gen: () => pick([
+    () => mkChoice('Скільки періодів у Періодичній системі?', ['7','6','8','18'], '7',
+      'Період — це горизонтальний ряд елементів. У таблиці 7 періодів, їхні номери стоять ліворуч.'),
+    () => mkChoice('Що таке період у Періодичній системі?', ['горизонтальний ряд елементів','вертикальний стовпець елементів','одна клітинка таблиці','ряд, винесений під таблицю'], 'горизонтальний ряд елементів',
+      'Період — горизонтальний ряд елементів. Вертикальний стовпець — це група.'),
+    () => mkChoice('Скільки великих періодів у Періодичній системі?', ['4','3','7','18'], '4',
+      'Великі періоди — 4, 5, 6 і 7, тобто їх чотири. Малі періоди — 1, 2 і 3.')
+  ])() },
+
+  { topic: 'Групи', gen: () => pick([
+    () => mkChoice('Скільки груп у Періодичній системі?', ['18','8','7','16'], '18',
+      'Група — це вертикальний стовпець елементів. У сучасній таблиці 18 груп, їхні номери стоять угорі.'),
+    () => mkChoice('Що таке група в Періодичній системі?', ['вертикальний стовпець елементів','горизонтальний ряд елементів','усі металічні елементи','два ряди під таблицею'], 'вертикальний стовпець елементів',
+      'Група — вертикальний стовпець елементів. Горизонтальний ряд — це період.'),
+    () => mkChoice('Де в таблиці записано номери груп?', ['угорі, над стовпцями','ліворуч від рядів','у кожній клітинці елемента','під таблицею'], 'угорі, над стовпцями',
+      'Номери груп (1–18) стоять над стовпцями, а номери періодів (1–7) — ліворуч від рядів.')
+  ])() },
+
+  { topic: 'Малі й великі періоди', gen: () => pick([
+    () => mkChoice('Які періоди називають малими?', ['1, 2 і 3','1 і 2','4, 5, 6 і 7','лише 1'], '1, 2 і 3',
+      'Малі періоди — 1, 2 і 3: у них 2 або 8 елементів. Великі — 4, 5, 6 і 7.'),
+    () => mkChoice('Скільки елементів у 1 періоді?', ['2','1','8','18'], '2',
+      'У 1 періоді лише два елементи: Гідроген H і Гелій He.'),
+    () => mkChoice('Скільки елементів у 2 періоді?', ['8','2','10','18'], '8',
+      '2 період — від Літію Li (№ 3) до Неону Ne (№ 10), тобто 8 елементів.'),
+    () => mkChoice('Скільки елементів у 3 періоді?', ['8','3','10','18'], '8',
+      '3 період — від Натрію Na (№ 11) до Аргону Ar (№ 18), тобто 8 елементів.'),
+    () => mkChoice('Скільки елементів у 4 періоді?', ['18','8','10','32'], '18',
+      '4 період — від Калію K (№ 19) до Криптону Kr (№ 36), тобто 18 елементів.'),
+    () => mkChoice('Скільки елементів у 6 періоді разом із винесеними під таблицю?', ['32','18','15','36'], '32',
+      'У 6 періоді 17 елементів в основному ряду і ще 15 лантаноїдів у винесеному ряду: 17 + 15 = 32.')
+  ])() },
+
+  { topic: 'Пошук за адресою', gen: () => {
+    const s = pick(['H','He','Li','Be','B','C','N','O','F','Ne','Na','Mg','Al','Si','P','S','Cl','Ar','K','Ca','Fe','Cu','Zn','Br','Ag','I','Au','Hg','Pb']);
+    const z = ZOF(s), p = periodOf(z), g = groupOf(z);
+    return { type: 'find', z, p, g,
+      html: `Знайди елемент за «адресою»: <b>${p} період, ${g} група</b>. Натисни на нього в таблиці.`,
+      short: `Знайди елемент: ${p} період, ${g} група`,
+      hint: 'Номер періоду — ліворуч від рядка, номер групи — угорі над стовпцем.',
+      explain: `За адресою «${p} період, ${g} група» розміщений ${nm(s)} (№ ${z}). Період — це рядок, група — стовпець.` };
+  } },
+
+  { topic: 'Адреса елемента', gen: () => {
+    const s = pick(['B','C','N','O','F','Ne','Al','Si','P','S','Cl','Ar','Al','S','Cl','K','Ca','Fe','Zn','Br']);
+    const z = ZOF(s), p = periodOf(z), g = groupOf(z);
+    let ex = `${nm(s)} стоїть у ${p}-му рядку згори — це ${p} період. Стовпці рахуємо зліва направо по всій ширині таблиці (їх 18), тому це ${g} група.`;
+    if (p <= 3 && g >= 13) ex += ' Зверни увагу: у 1–3 періодах між 2 і 13 групами порожньо, але ці групи теж рахуються.';
+    return { type: 'address', z, p, g,
+      html: `Збій стер номери періодів і груп. Визнач «адресу» елемента, що світиться: <b>${esc(nm(s))}</b>.`,
+      short: `Адреса елемента ${s}`,
+      hint: 'Порахуй рядки згори вниз і стовпці зліва направо, а потім обери період і групу.',
+      explain: ex };
+  } },
+
+  { topic: 'Порядковий номер', gen: () => {
+    const [z, wrong] = pick([[9,['Fe','Fr','Fl']],[11,['N','Ne','Nb']],[14,['S','Sn','Sc']],[16,['Si','Sr','Sn']],[19,['Kr','Ca','Cr']],
+      [20,['C','Cl','Cs']],[7,['Na','Ne','Ni']],[12,['Mn','Mo','Md']],[6,['Ca','Cl','Co']],[17,['C','Ca','Cr']],[13,['Ag','Ar','Au']],[15,['Pb','Po','K']]]);
+    const s = SYM[z-1];
+    return { type: 'missing', z, correct: s, options: shuffle([s, ...wrong]),
+      html: `Збій стер символ у клітинці <b>№ ${z}</b>. Який елемент має порядковий номер ${z}?`,
+      short: `Який елемент має № ${z}?`,
+      hint: 'Елементи стоять у таблиці за зростанням порядкового номера.',
+      explain: `№ ${z} — ${nm(s)}. Порядкові номери зростають на 1 від клітинки до клітинки: ${SYM[z-2]} (${z-1}) → ${s} (${z}) → ${SYM[z]} (${z+1}).` };
+  } },
+
+  { topic: 'Знайди зайвий', gen: () => {
+    const v = pick([
+      { where: '1 групу',   set: ['Li','Na','K','Rb'], odd: 'Mg', why: 'Mg (Магній) — у 2 групі, а Li, Na, K, Rb — елементи 1 групи.' },
+      { where: '2 групу',   set: ['Be','Mg','Ca','Sr'], odd: 'Na', why: 'Na (Натрій) — у 1 групі, а Be, Mg, Ca, Sr — елементи 2 групи.' },
+      { where: '17 групу',  set: ['F','Cl','Br','I'], odd: 'O', why: 'O (Оксиген) — у 16 групі, а F, Cl, Br, I — галогени, елементи 17 групи.' },
+      { where: '18 групу',  set: ['He','Ne','Ar','Kr'], odd: 'Cl', why: 'Cl (Хлор) — у 17 групі, а He, Ne, Ar, Kr — інертні елементи 18 групи.' },
+      { where: '16 групу',  set: ['O','S','Se','Te'], odd: 'N', why: 'N (Нітроген) — у 15 групі, а O, S, Se, Te — елементи 16 групи.' },
+      { where: '2 період',  set: ['Li','B','C','O'], odd: 'Na', why: 'Na (Натрій) — у 3 періоді, а Li, B, C, O — елементи 2 періоду.' },
+      { where: '3 період',  set: ['Na','Mg','Al','S'], odd: 'C', why: 'C (Карбон) — у 2 періоді, а Na, Mg, Al, S — елементи 3 періоду.' },
+      { where: '4 період',  set: ['K','Ca','Fe','Br'], odd: 'Mg', why: 'Mg (Магній) — у 3 періоді, а K, Ca, Fe, Br — елементи 4 періоду.' }
+    ]);
+    const opts = shuffle([...v.set, v.odd]);
+    return { type: 'tiles', correct: v.odd, options: opts, showZ: true,
+      html: `Збій підкинув чужий елемент у <b>${v.where}</b>. Натисни на зайвий.`,
+      short: `Зайвий у ${v.where.replace('групу','групі').replace('період','періоді')}: ${opts.join(', ')}`,
+      hint: 'Перевір, де кожен елемент стоїть у таблиці.',
+      explain: v.why };
+  } },
+
+  { topic: 'Родини елементів', gen: () => {
+    const NAMES = ['галогени','інертні елементи','лантаноїди','актиноїди','лужні метали'];
+    const v = pick([
+      { q: 'Як називають елементи 17 групи — F, Cl, Br, I?', a: 'галогени', ex: 'Елементи 17 групи — Флуор, Хлор, Бром, Йод — називають галогенами.' },
+      { q: 'Як називають елементи 18 групи — He, Ne, Ar, Kr, Xe, Rn?', a: 'інертні елементи', ex: 'Елементи 18 групи — інертні (благородні) елементи. Вони майже не вступають у хімічні реакції.' },
+      { q: 'Як називають 15 елементів № 57–71, винесених у ряд під таблицею?', a: 'лантаноїди', ex: 'Лантаноїди — 15 елементів від Лантану La (№ 57) до Лютецію Lu (№ 71). Їх винесли під таблицю, щоб вона не була надто широкою.' },
+      { q: 'Як називають 15 елементів № 89–103 у другому винесеному ряду?', a: 'актиноїди', ex: 'Актиноїди — 15 елементів від Актинію Ac (№ 89) до Лоуренсію Lr (№ 103), винесені в окремий ряд під таблицею.' }
+    ]);
+    return mkChoice(v.q, [v.a, ...sample(NAMES.filter(n => n !== v.a), 3)], v.a, v.ex);
+  } },
+
+  { topic: 'Металічні й неметалічні', gen: () => {
+    const NM = ['C','N','O','S','P','Cl','F','Br','I'], M = ['Na','K','Mg','Ca','Al','Fe','Cu','Zn','Ag','Au','Li','Ba','Pb','Hg'];
+    const kind = pick(['nm','m','nm','m','where','more']);
+    if (kind === 'nm'){
+      const a = pick(NM), opts = shuffle([a, ...sample(M, 3)]);
+      return { type: 'tiles', correct: a, options: opts, showZ: true,
+        html: 'Натисни на <b>неметалічний</b> елемент.', short: `Обери неметалічний: ${opts.join(', ')}`,
+        hint: 'Згадай, у якій частині таблиці розміщені неметалічні елементи.',
+        explain: `${nm(a)} — неметалічний елемент: він у правій верхній частині таблиці. Решта — металічні елементи.` };
+    }
+    if (kind === 'm'){
+      const a = pick(M), opts = shuffle([a, ...sample(NM, 3)]);
+      return { type: 'tiles', correct: a, options: opts, showZ: true,
+        html: 'Натисни на <b>металічний</b> елемент.', short: `Обери металічний: ${opts.join(', ')}`,
+        hint: 'Металічні елементи займають ліву та нижню частину таблиці.',
+        explain: `${nm(a)} — металічний елемент. Решта — неметалічні, вони в правій верхній частині таблиці.` };
+    }
+    if (kind === 'where') return mkChoice('Де в Періодичній системі переважно розміщені неметалічні елементи?',
+      ['у правій верхній частині','у лівій нижній частині','лише в 1 групі','лише у винесених рядах'], 'у правій верхній частині',
+      'Неметалічні елементи зібрані в правій верхній частині таблиці (Гідроген — виняток, він стоїть ліворуч). Металічні займають ліву й нижню частину.');
+    return mkChoice('Яких елементів у Періодичній системі більше?', ['металічних','неметалічних','порівну','інертних'], 'металічних',
+      'Металічних елементів значно більше: приблизно чотири з кожних п’яти елементів таблиці — металічні.');
+  } },
+
+  { topic: 'Загальна будова', gen: () => {
+    const kind = pick(['count','order','charge','charge']);
+    if (kind === 'count') return mkChoice('Скільки хімічних елементів у сучасній Періодичній системі?', ['118','92','108','120'], '118',
+      'Нині відомо 118 хімічних елементів. Останній — Оганесон Og (№ 118).');
+    if (kind === 'order') return mkChoice('Як розміщено елементи в сучасній Періодичній системі?',
+      ['за зростанням порядкового номера','за алфавітом символів','за датою відкриття','за кольором простих речовин'], 'за зростанням порядкового номера',
+      'Елементи стоять за зростанням порядкового номера: у кожній наступній клітинці номер на 1 більший.');
+    const s = pick(['Na','Mg','Al','O','S','Ca','C','N']), z = ZOF(s), p = periodOf(z), g = groupOf(z);
+    const pool = [`+${z}`, `+${p}`, `+${g}`, `−${z}`, `+${2 * z}`];
+    const opts = [...new Set(pool)].slice(0, 5);
+    const wrong = sample(opts.filter(o => o !== `+${z}`), 3);
+    return mkChoice(`Чому дорівнює заряд ядра атома ${NAME[s]} (${s}, № ${z})?`, [`+${z}`, ...wrong], `+${z}`,
+      `Заряд ядра атома дорівнює порядковому номеру елемента: ${s} має № ${z}, тому заряд ядра +${z}.`);
+  } }
+];
+
+/* ======================= СТАН ГРИ ======================= */
+const S = { name: '', cls: '', qs: [], i: 0, ans: [], t0: 0, locked: false, qBoard: null, sentId: null, fullShown: false };
+let MAIN = null;
+
+function newMain(){
+  if (MAIN) MAIN.destroy();
+  MAIN = new Board({ glitch: true, labels: true });
+  $('hostStart').appendChild(MAIN.el);
+}
+function mount(host){ $(host).appendChild(MAIN.el); }
+
+function show(id){
+  document.querySelectorAll('.scr').forEach(s => s.classList.toggle('active', s.id === id));
+  $('bar').hidden = id === 'scr-start';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function paintBar(){
+  const segs = $('segs'); segs.innerHTML = '';
+  for (let k = 0; k < 10; k++){
+    const i = el('i');
+    if (k < S.ans.length) i.className = S.ans[k].ok ? 'ok' : 'bad';
+    else if (k === S.i) i.className = 'cur';
+    segs.appendChild(i);
+  }
+  const pct = S.ans.filter(a => a.ok).length * 10;
+  $('pctNum').textContent = pct + ' %';
+}
+
+/* ---------- старт ---------- */
+const prev = load();
+if (prev.name) $('inName').value = prev.name;
+if (prev.cls){
+  if (['7-А','7-Б'].includes(prev.cls)) $('inCls').value = prev.cls;
+  else { $('inCls').value = 'other'; $('inClsOther').hidden = false; $('inClsOther').value = prev.cls; }
+}
+$('inCls').addEventListener('change', () => { $('inClsOther').hidden = $('inCls').value !== 'other'; if (!$('inClsOther').hidden) $('inClsOther').focus(); });
+
+function normCls(s){
+  s = String(s || '').trim().toUpperCase().replace(/\s+/g, '').replace(/A/g, 'А').replace(/B/g, 'В').replace(/E/g, 'Е');
+  const m = s.match(/^(\d{1,2})[-–—.]?([А-ЯІЇЄҐ])$/);
+  return m ? `${m[1]}-${m[2]}` : s;
+}
+
+$('startForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = $('inName').value.trim().replace(/\s+/g, ' ');
+  const cls = $('inCls').value === 'other' ? normCls($('inClsOther').value) : $('inCls').value;
+  const words = name.split(' ').filter(w => w.replace(/[^A-Za-zА-Яа-яІіЇїЄєҐґ’'-]/g, '').length >= 2);
+  if (words.length < 2){ $('startErr').textContent = 'Напиши прізвище та ім’я (два слова).'; $('inName').focus(); return; }
+  if (!cls){ $('startErr').textContent = 'Обери свій клас.'; $('inCls').focus(); return; }
+  $('startErr').textContent = '';
+  S.name = name; S.cls = cls; save({ name, cls });
+  SFX.tap();
+  begin();
+});
+
+function begin(){
+  S.qs = SLOTS.map((sl, k) => Object.assign(sl.gen(), { topic: sl.topic, n: k + 1 }));
+  S.i = 0; S.ans = []; S.t0 = Date.now(); S.fullShown = false; S.sentId = null;
+  MAIN.setGlitchLevel(1);
+  MAIN.el.classList.add('marked');
+  showQ();
+}
+
+/* ---------- показ питання ---------- */
+function setBtn(on){ $('qBtn').disabled = !on; }
+
+function showQ(){
+  const q = S.qs[S.i];
+  S.locked = false;
+  if (S.qBoard){ S.qBoard.destroy(); S.qBoard = null; }
+  $('qBadge').textContent = `Сектор ${q.n} з 10`;
+  $('qTopic').textContent = q.topic;
+  $('qText').innerHTML = q.html;
+  $('qHint').textContent = q.hint || '';
+  $('qHint').hidden = !q.hint;
+  const body = $('qBody'); body.innerHTML = '';
+  $('qFeed').hidden = true; $('qFeed').className = 'feed';
+  const btn = $('qBtn'); btn.textContent = 'Перевірити'; btn.className = 'btn'; btn.disabled = true; btn.onclick = check;
+  q.sel = undefined;
+  ({ choice: renderChoice, tiles: renderTiles, missing: renderMissing, find: renderFind, address: renderAddress })[q.type](q, body);
+  paintBar();
+  show('scr-q');
+}
+
+function renderChoice(q, body){
+  const g = el('div', 'opts');
+  q.options.forEach((o, k) => {
+    const b = el('button', 'opt', `<b class="lt">${'АБВГ'[k]}</b><span>${esc(o)}</span>`);
+    b.type = 'button'; b.dataset.v = o;
+    b.addEventListener('click', () => { if (S.locked) return; g.querySelectorAll('.opt').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); q.sel = o; SFX.tap(); setBtn(true); });
+    g.appendChild(b);
+  });
+  body.appendChild(g);
+  q.evaluate = () => ({ ok: q.sel === q.correct, given: q.sel, correct: q.correct });
+  q.reveal = () => g.querySelectorAll('.opt').forEach(b => { b.disabled = true; if (b.dataset.v === q.correct) b.classList.add('right'); else if (b.dataset.v === q.sel) b.classList.add('wrong'); });
+}
+
+function ptile(s, k, showZ){
+  const z = ZOF(s);
+  const b = el('button', 'pt p-' + PAL[(k * 3 + 1) % 7], `${showZ ? `<span class="z">${z}</span>` : ''}<span class="s">${s}</span>`);
+  b.type = 'button'; b.dataset.v = s; b.setAttribute('aria-label', showZ ? `${s}, номер ${z}` : s);
+  return b;
+}
+
+function renderTiles(q, body){
+  const g = el('div', 'ptiles');
+  q.options.forEach((s, k) => {
+    const b = ptile(s, k, q.showZ);
+    b.addEventListener('click', () => { if (S.locked) return; g.querySelectorAll('.pt').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); q.sel = s; SFX.tap(); setBtn(true); });
+    g.appendChild(b);
+  });
+  body.appendChild(g);
+  q.evaluate = () => ({ ok: q.sel === q.correct, given: q.sel, correct: q.correct });
+  q.reveal = () => g.querySelectorAll('.pt').forEach(b => { b.disabled = true; b.classList.remove('sel'); if (b.dataset.v === q.correct) b.classList.add('right'); else if (b.dataset.v === q.sel) b.classList.add('wrong'); });
+}
+
+function renderMissing(q, body){
+  body.appendChild(el('p', 'strip-cap', 'Фрагмент таблиці за зростанням порядкового номера:'));
+  const strip = el('div', 'strip');
+  let qt = null;
+  for (let z = Math.max(1, q.z - 2); z <= Math.min(118, q.z + 2); z++){
+    const s = SYM[z-1];
+    const t = el('div', 'pt p-' + PAL[(z * 2) % 7], `<span class="z">${z}</span><span class="s">${z === q.z ? '?' : s}</span>`);
+    if (z === q.z){ t.classList.add('q'); qt = t; }
+    t.setAttribute('aria-label', z === q.z ? `номер ${z}, символ стерто` : `${s}, номер ${z}`);
+    strip.appendChild(t);
+  }
+  body.appendChild(strip);
+  body.appendChild(el('p', 'strip-cap', 'Обери символ для клітинки зі знаком питання:'));
+  q.showZ = false;
+  renderTiles(q, body);
+  const rv = q.reveal;
+  q.reveal = () => { rv(); qt.classList.remove('q'); qt.querySelector('.s').textContent = q.correct; };
+}
+
+function renderFind(q, body){
+  const wrap = el('div', 'qboard');
+  const b = new Board({ labels: true, clickable: true, neutral: true });
+  S.qBoard = b;
+  b.onPick = (z, t) => {
+    if (S.locked) return;
+    if (q.selT) q.selT.classList.remove('pick');
+    t.classList.add('pick'); q.selT = t; q.sel = z; SFX.tap(); setBtn(true);
+  };
+  wrap.appendChild(b.el); body.appendChild(wrap);
+  body.appendChild(el('p', 'scroll-hint', '↔ Таблицю можна гортати вбік'));
+  q.evaluate = () => ({ ok: q.sel === q.z, given: q.sel ? `${SYM[q.sel-1]} (${periodOf(q.sel)} період, ${groupOf(q.sel)} група)` : '—', correct: SYM[q.z-1] });
+  q.reveal = () => {
+    b.locked = true;
+    if (q.selT) q.selT.classList.remove('pick');
+    b.tiles.get(q.z).classList.add('right');
+    if (q.sel && q.sel !== q.z) b.tiles.get(q.sel).classList.add('wrong');
+  };
+}
+
+function renderAddress(q, body){
+  const wrap = el('div', 'qboard fit');
+  const b = new Board({ labels: false, clickable: false, neutral: true });
+  S.qBoard = b;
+  b.tiles.get(q.z).classList.add('hl');
+  wrap.appendChild(b.el); body.appendChild(wrap);
+  q.sp = null; q.sg = null;
+  const mk = (label, n, key) => {
+    body.appendChild(el('div', 'chips-l', label));
+    const row = el('div', 'chips');
+    for (let v = 1; v <= n; v++){
+      const c = el('button', 'chip', String(v)); c.type = 'button'; c.dataset.v = v;
+      c.setAttribute('aria-label', `${label} ${v}`);
+      c.addEventListener('click', () => {
+        if (S.locked) return;
+        row.querySelectorAll('.chip').forEach(x => x.classList.remove('sel')); c.classList.add('sel');
+        q[key] = v; SFX.tap(); setBtn(q.sp != null && q.sg != null);
+      });
+      row.appendChild(c);
+    }
+    body.appendChild(row);
+    return row;
+  };
+  const rp = mk('Період', 7, 'sp'), rg = mk('Група', 18, 'sg');
+  q.evaluate = () => ({ ok: q.sp === q.p && q.sg === q.g, given: `${q.sp} період, ${q.sg} група`, correct: `${q.p} період, ${q.g} група` });
+  q.reveal = () => {
+    [[rp, q.sp, q.p], [rg, q.sg, q.g]].forEach(([row, sel, ok]) => row.querySelectorAll('.chip').forEach(c => {
+      c.disabled = true; c.classList.remove('sel');
+      const v = +c.dataset.v; if (v === ok) c.classList.add('right'); else if (v === sel) c.classList.add('wrong');
+    }));
+  };
+}
+
+/* ---------- перевірка ---------- */
+function check(){
+  const q = S.qs[S.i];
+  if (S.locked) return;
+  S.locked = true;
+  const r = q.evaluate();
+  q.reveal();
+  S.ans.push({ n: q.n, topic: q.topic, short: q.short, ok: r.ok, given: r.given, correct: r.correct });
+  const f = $('qFeed');
+  f.hidden = false; f.className = 'feed ' + (r.ok ? 'ok' : 'bad');
+  f.innerHTML = r.ok
+    ? `<div class="h">✓ Правильно!</div><p>${esc(q.explain)}</p>`
+    : `<div class="h">✗ Помилка. Правильна відповідь: ${esc(r.correct)}</div><p>${esc(q.explain)}</p>`;
+  r.ok ? SFX.ok() : SFX.bad();
+  paintBar();
+  const btn = $('qBtn');
+  btn.textContent = r.ok ? 'Відновити сектор ▶' : 'До таблиці ▶';
+  btn.className = 'btn' + (r.ok ? ' ok' : '');
+  btn.disabled = false; btn.onclick = toFix;
+  f.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ---------- сцена відновлення ---------- */
+function sectorText(i){
+  const [a, b] = RANGES[i];
+  if (i === 0) return `номери періодів і елементи № ${a}–${b}`;
+  if (i === 1) return `номери груп і елементи № ${a}–${b}`;
+  return `елементи № ${a}–${b}`;
+}
+
+function toFix(){
+  const a = S.ans[S.i], i = S.i;
+  mount('hostFix');
+  const m = $('fixMsg');
+  m.className = 'fixmsg ' + (a.ok ? 'ok' : 'bad');
+  m.querySelector('.ic').textContent = a.ok ? '✓' : '✗';
+  m.querySelector('.h').textContent = a.ok ? `Сектор ${i + 1} «${a.topic}» відновлено!` : `Сектор ${i + 1} «${a.topic}» не відновлено`;
+  const st = sectorText(i);
+  m.querySelector('.sub').textContent = a.ok ? `${st[0].toUpperCase() + st.slice(1)} повернулися на свої місця.` : `${st[0].toUpperCase() + st.slice(1)} залишаються у збої.`;
+  $('fixBtn').textContent = S.i < 9 ? 'Наступне питання ▶' : 'Результати ▶';
+  show('scr-fix');
+  setTimeout(() => {
+    if (a.ok){
+      if (i === 0) MAIN.fixLabels('p');
+      if (i === 1) MAIN.fixLabels('g');
+      MAIN.repair(rangeZ(i)); SFX.fix();
+    } else MAIN.fail(rangeZ(i));
+    MAIN.setGlitchLevel(1 - S.ans.filter(x => x.ok).length / 10);
+  }, 420);
+}
+
+$('fixBtn').addEventListener('click', () => {
+  SFX.tap();
+  if (S.i < 9){ S.i++; showQ(); }
+  else finish();
+});
+
+/* ---------- фінал ---------- */
+function finish(){
+  if (S.qBoard){ S.qBoard.destroy(); S.qBoard = null; }
+  S.i = 10;
+  const score = S.ans.filter(a => a.ok).length, pct = score * 10, dur = fmtTime(Date.now() - S.t0);
+  const st = load();
+  const attempts = Object.assign({}, st.attempts);
+  const key = (S.name + '|' + S.cls).toLowerCase();
+  attempts[key] = (attempts[key] || 0) + 1;
+  save({ attempts });
+  paintBar();
+  mount('hostEnd');
+  $('endPct').textContent = pct + ' %';
+  const [t, sub] = score === 10 ? ['Систему повністю відновлено!', 'Бездоганно! Ти чудово знаєш будову Періодичної системи.']
+    : score >= 8 ? ['Систему майже відновлено!', 'Залишилося кілька пошкоджених секторів — переглянь розбір нижче.']
+    : score >= 5 ? ['Систему відновлено частково', 'Переглянь розбір відповідей: так легше запам’ятати будову таблиці.']
+    : ['Система ще у збої', 'Повтори будову Періодичної системи за підручником і переглянь розбір відповідей.'];
+  $('endTitle').textContent = t; $('endSub').textContent = sub;
+  $('stScore').textContent = `${score} з 10`; $('stTime').textContent = dur;
+  $('stWho').textContent = S.name.split(' ')[0]; $('stCls').textContent = S.cls;
+  $('btnFull').disabled = score === 10; $('btnFull').hidden = score === 10;
+  const ul = $('review'); ul.innerHTML = '';
+  S.ans.forEach(a => {
+    const li = el('li', a.ok ? 'ok' : 'bad');
+    li.innerHTML = `<span class="mk">${a.ok ? '✓' : '✗'}</span><div class="tp">Сектор ${a.n} · ${esc(a.topic)}</div><div class="qq">${esc(a.short)}</div>` +
+      (a.ok ? `<div class="an">Твоя відповідь: <b>${esc(a.given)}</b> — правильно</div>`
+            : `<div class="an">Твоя відповідь: <b>${esc(a.given)}</b> · правильна: <b>${esc(a.correct)}</b></div>`);
+    ul.appendChild(li);
+  });
+  show('scr-end');
+  SFX.end();
+  const payload = {
+    id: (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2)),
+    game: GAME, name: S.name, cls: S.cls, score, percent: pct,
+    mark12: Math.max(1, Math.round(score * 1.2)), attempt: attempts[key], duration: dur,
+    marks: S.ans.map(a => a.ok),
+    errors: S.ans.filter(a => !a.ok).map(a => `${a.n}. ${a.short}: «${a.given}» → правильно «${a.correct}»`).join('; ')
+  };
+  send(payload);
+}
+
+/* ---------- надсилання результату ---------- */
+function setSend(cls, html){ const b = $('sendBox'); b.className = 'send ' + cls; b.innerHTML = html; }
+
+async function post(payload){
+  const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 20000);
+  try {
+    const r = await fetch(API, { method: 'POST', body: JSON.stringify(payload), signal: ctl.signal });
+    const j = await r.json();
+    return !!(j && j.ok);
+  } catch (e) {
+    // запасний шлях: без читання відповіді (повтори відсіює таблиця за ID)
+    try { await fetch(API, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) }); return true; } catch (e2) { return false; }
+  } finally { clearTimeout(to); }
+}
+
+function queue(payload, add){
+  const st = load(); let q = Array.isArray(st.queue) ? st.queue : [];
+  q = q.filter(p => p.id !== payload.id);
+  if (add) q.push(payload);
+  save({ queue: q.slice(-20) });
+}
+
+async function send(payload){
+  if (!API){ setSend('bad', '⚠ Збір результатів ще не підключено — покажи цей екран учителю.'); return; }
+  setSend('wait', '⏳ Надсилаю результат учителю…');
+  queue(payload, true);
+  const ok = await post(payload);
+  if (ok){ queue(payload, false); setSend('ok', '✓ Результат надіслано вчителю'); }
+  else {
+    setSend('bad', '⚠ Не вдалося надіслати. Перевір інтернет. <button type="button" id="resend">Надіслати ще раз</button>');
+    $('resend').addEventListener('click', () => send(payload));
+  }
+}
+
+async function flushQueue(){
+  if (!API) return;
+  const q = load().queue || [];
+  for (const p of q){ if (await post(p)) queue(p, false); }
+}
+
+$('btnFull').addEventListener('click', () => {
+  if (S.fullShown) return;
+  S.fullShown = true; $('btnFull').disabled = true;
+  if (!S.ans[0] || !S.ans[0].ok) MAIN.fixLabels('p');
+  if (!S.ans[1] || !S.ans[1].ok) MAIN.fixLabels('g');
+  const zs = []; S.ans.forEach((a, i) => { if (!a.ok) zs.push(...rangeZ(i)); });
+  MAIN.repair(zs); MAIN.setGlitchLevel(0); SFX.fix();
+});
+
+$('btnAgain').addEventListener('click', () => {
+  SFX.tap();
+  newMain();
+  show('scr-start');
+  setTimeout(() => $('inName').focus(), 300);
+});
+
+/* ---------- запуск ---------- */
+newMain();
+flushQueue();
+
+// самоперевірка даних
+(function selfTest(){
+  const seen = new Set();
+  GLITCH.forEach((row, i) => { const p = row.split(' '); if (p.length !== 18) console.error('GLITCH row', i + 1, p.length); p.forEach(s => { if (s !== '.' && s !== '*'){ if (seen.has(s) || ZOF(s) < 1) console.error('GLITCH bad', s); seen.add(s); } }); });
+  if (seen.size !== 118) console.error('GLITCH size', seen.size);
+  const hs = new Set(); for (let z = 1; z <= 118; z++) hs.add(home(z).join(','));
+  if (hs.size !== 118) console.error('home collision');
+})();
+
+window.__zbiy = { S, SLOTS, home, periodOf, groupOf, catOf };
+})();
+</script>
+</body>
+</html>
